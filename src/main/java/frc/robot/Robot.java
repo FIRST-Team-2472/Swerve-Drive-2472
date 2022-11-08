@@ -4,7 +4,17 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ModuleConstants;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -13,18 +23,37 @@ import edu.wpi.first.wpilibj.TimedRobot;
  * project.
  */
 public class Robot extends TimedRobot {
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
-  @Override
-  public void robotInit() {}
+  private NetworkTableEntry shuffleEncoder, shuffleTurnEncoder, shuffleAbsoluteEncoder;
+
+  private TalonFX driveMotor = new TalonFX(DriveConstants.kDriveMotorPort);
+  private TalonFX turningMotor = new TalonFX(DriveConstants.kTurningMotorPort);
+
+  private SwerveEncoder abosluteEncoder = new SwerveEncoder(DriveConstants.kDriveAbsoluteEncoderPort);
+
+  private Joystick joystick = new Joystick(0);
 
   @Override
-  public void robotPeriodic() {}
+  public void robotInit() {
+
+    ShuffleboardTab programmerBoard = Shuffleboard.getTab("Programmer Board");
+
+    shuffleEncoder = programmerBoard.add("Drive Count", 0).getEntry();
+    shuffleTurnEncoder = programmerBoard.add("Turning Count", 0).getEntry();
+    shuffleAbsoluteEncoder = programmerBoard.add("Absolute Value", 0).getEntry();
+  }
 
   @Override
-  public void autonomousInit() {}
+  public void robotPeriodic() {
+    shuffleEncoder.setNumber(driveMotor.getSelectedSensorPosition()*ModuleConstants.kDriveEncoderRot2Meter);
+    shuffleTurnEncoder.setNumber(turningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad);
+    shuffleAbsoluteEncoder.setNumber(abosluteEncoder.getPosition());
+  }
+
+  @Override
+  public void autonomousInit() {
+    driveMotor.setSelectedSensorPosition(0);
+    turningMotor.setSelectedSensorPosition(0);
+  }
 
   @Override
   public void autonomousPeriodic() {}
@@ -33,7 +62,10 @@ public class Robot extends TimedRobot {
   public void teleopInit() {}
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    driveMotor.set(ControlMode.PercentOutput, joystick.getY());
+    turningMotor.set(ControlMode.PercentOutput, joystick.getX());
+  }
 
   @Override
   public void disabledInit() {}
