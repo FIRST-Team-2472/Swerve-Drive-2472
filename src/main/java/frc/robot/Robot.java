@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
     shuffleEncoder = programmerBoard.add("Drive Count", 0).getEntry();
     shuffleTurnEncoder = programmerBoard.add("Turning Count", 0).getEntry();
     shuffleAbsoluteEncoder = programmerBoard.add("Absolute Value", 0).getEntry();
+
   }
 
   @Override
@@ -63,8 +64,19 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+
     driveMotor.set(ControlMode.PercentOutput, joystick.getY());
     turningMotor.set(ControlMode.PercentOutput, joystick.getX());
+    
+    double start = turningMotor.getSelectedSensorPosition();
+    double end = start + 90*ModuleConstants.kTurningEncoderRot2Rad;
+    
+    if (joystick.getRawButton(3))
+      turningMotor.set(ControlMode.PercentOutput, .5);
+
+    if (turningMotor.getSelectedSensorPosition() > end)
+          turningMotor.set(ControlMode.PercentOutput, 0);
+
   }
 
   @Override
