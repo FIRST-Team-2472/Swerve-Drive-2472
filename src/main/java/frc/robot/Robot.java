@@ -6,7 +6,6 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
@@ -23,7 +22,8 @@ import frc.robot.Constants.ModuleConstants;
  * project.
  */
 public class Robot extends TimedRobot {
-  private NetworkTableEntry shuffleEncoder, shuffleTurnEncoder, shuffleAbsoluteEncoder;
+  private NetworkTableEntry shuffleEncoder, shuffleTurnEncoder, shuffleAbsoluteEncoder,
+    shuffleEncoderSpeed, shuffleTurnEncoderSpeed;
 
   private TalonFX driveMotor = new TalonFX(DriveConstants.kDriveMotorPort);
   private TalonFX turningMotor = new TalonFX(DriveConstants.kTurningMotorPort);
@@ -40,6 +40,9 @@ public class Robot extends TimedRobot {
     shuffleEncoder = programmerBoard.add("Drive Count", 0).getEntry();
     shuffleTurnEncoder = programmerBoard.add("Turning Count", 0).getEntry();
     shuffleAbsoluteEncoder = programmerBoard.add("Absolute Value", 0).getEntry();
+    shuffleEncoderSpeed = programmerBoard.add("Drive Speed", 0).getEntry();
+    shuffleTurnEncoderSpeed = programmerBoard.add("Turning Speed", 0).getEntry();
+
   }
 
   @Override
@@ -47,10 +50,14 @@ public class Robot extends TimedRobot {
     shuffleEncoder.setNumber(driveMotor.getSelectedSensorPosition()*ModuleConstants.kDriveEncoderRot2Meter);
     shuffleTurnEncoder.setNumber(turningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad);
     shuffleAbsoluteEncoder.setNumber(abosluteEncoder.getPosition());
+
+    shuffleEncoderSpeed.setNumber(driveMotor.getSelectedSensorVelocity()*ModuleConstants.kDriveEncoderRPMS2MeterPerSec);
+    shuffleTurnEncoderSpeed.setNumber(turningMotor.getSelectedSensorVelocity()*ModuleConstants.kTurningEncoderRPMS2RadPerSec);
   }
 
   @Override
   public void autonomousInit() {
+    
     driveMotor.setSelectedSensorPosition(0);
     turningMotor.setSelectedSensorPosition(0);
   }
@@ -59,12 +66,17 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {}
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    
+    driveMotor.setSelectedSensorPosition(0);
+    turningMotor.setSelectedSensorPosition(0);
+  }
 
   @Override
   public void teleopPeriodic() {
-    driveMotor.set(ControlMode.PercentOutput, joystick.getY());
-    turningMotor.set(ControlMode.PercentOutput, joystick.getX());
+    driveMotor.set(ControlMode.PercentOutput, 1);
+    //driveMotor.set(ControlMode.PercentOutput, joystick.getY());
+    //turningMotor.set(ControlMode.PercentOutput, joystick.getX());
   }
 
   @Override
