@@ -8,6 +8,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -15,6 +17,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.subsystems.SwerveModule;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -24,12 +27,13 @@ import frc.robot.Constants.ModuleConstants;
  */
 public class Robot extends TimedRobot {
   private NetworkTableEntry shuffleEncoder, shuffleTurnEncoder, shuffleAbsoluteEncoder;
-
-  private TalonFX driveMotor = new TalonFX(DriveConstants.kDriveMotorPort);
+  private SwerveModule wheel1 = new SwerveModule(DriveConstants.kDriveMotorPort, DriveConstants.kTurningMotorPort, DriveConstants.kDriveEncoderReversed, DriveConstants.kTurningEncoderReversed,
+   DriveConstants.kDriveAbsoluteEncoderPort, DriveConstants.kDriveAbsoluteEncoderOffsetRad, DriveConstants.kDriveAbsoluteEncoderReversed);
+  /*private TalonFX driveMotor = new TalonFX(DriveConstants.kDriveMotorPort);
   private TalonFX turningMotor = new TalonFX(DriveConstants.kTurningMotorPort);
 
-  private SwerveEncoder abosluteEncoder = new SwerveEncoder(DriveConstants.kDriveAbsoluteEncoderPort);
-
+  private SwerveEncoder abosluteEncoder = new SwerveEncoder(DriveConstants.kDriveAbsoluteEncoderPort, DriveConstants.kDriveAbsoluteEncoderOffsetRad);
+  */
   private Joystick joystick = new Joystick(0);
 
   @Override
@@ -45,37 +49,27 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    shuffleEncoder.setNumber(driveMotor.getSelectedSensorPosition()*ModuleConstants.kDriveEncoderRot2Meter);
-    shuffleTurnEncoder.setNumber(turningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad);
-    shuffleAbsoluteEncoder.setNumber(abosluteEncoder.getPosition());
+    shuffleEncoder.setNumber(wheel1.getDrivePosition());
+    shuffleTurnEncoder.setNumber(wheel1.getTurningPosition());
+    //shuffleAbsoluteEncoder.setNumber(abosluteEncoder.getPosition());
   }
 
   @Override
   public void autonomousInit() {
-    driveMotor.setSelectedSensorPosition(0);
-    turningMotor.setSelectedSensorPosition(0);
+    wheel1.resetEncoders();
   }
 
   @Override
   public void autonomousPeriodic() {}
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    wheel1.resetEncoders();
+  }
 
   @Override
   public void teleopPeriodic() {
-
-    driveMotor.set(ControlMode.PercentOutput, joystick.getY());
-    turningMotor.set(ControlMode.PercentOutput, joystick.getX());
-    
-    double start = turningMotor.getSelectedSensorPosition();
-    double end = start + 90*ModuleConstants.kTurningEncoderRot2Rad;
-    
-    if (joystick.getRawButton(3))
-      turningMotor.set(ControlMode.PercentOutput, .5);
-
-    if (turningMotor.getSelectedSensorPosition() > end)
-          turningMotor.set(ControlMode.PercentOutput, 0);
+    wheel1.setDesiredState(new SwerveModuleState(3.5, new Rotation2d(0)));
 
   }
 
