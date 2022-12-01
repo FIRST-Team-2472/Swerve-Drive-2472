@@ -74,7 +74,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    driveMotor.set(ControlMode.PercentOutput, 1);
+    turningMotor.set(ControlMode.PercentOutput, 1);
     //driveMotor.set(ControlMode.PercentOutput, joystick.getY());
     //turningMotor.set(ControlMode.PercentOutput, joystick.getX());
   }

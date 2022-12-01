@@ -37,16 +37,16 @@ public final class Constants {
 
         public static final boolean kTurningEncoderReversed = true;
 
-        public static final boolean kDriveEncoderReversed = true;
+        public static final boolean kDriveEncoderReversed = false;
 
         public static final int kDriveAbsoluteEncoderPort = 21;
 
-        public static final boolean kDriveAbsoluteEncoderReversed = false;
+        public static final boolean kDriveAbsoluteEncoderReversed = true;
 
-        public static final double kDriveAbsoluteEncoderOffsetRad = 0;
+        public static final double kDriveAbsoluteEncoderOffsetRad = 2.1;
 
-        public static final double kPhysicalMaxSpeedMetersPerSecond = 4;
-        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
+        public static final double kPhysicalMaxSpeedMetersPerSecond = 3.5;
+        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 7 * 2 * Math.PI;
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
