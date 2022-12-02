@@ -18,13 +18,11 @@ public class SwerveModule {
     private final PIDController turningPidController;
 
     private final SwerveEncoder absoluteEncoder;
-    private final boolean absoluteEncoderReversed;
 
     public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
             int absoluteEncoderId, double absoluteEncoderOffset, boolean absoluteEncoderReversed) {
 
-        this.absoluteEncoderReversed = absoluteEncoderReversed;
-        absoluteEncoder = new SwerveEncoder(absoluteEncoderId, absoluteEncoderOffset);
+        absoluteEncoder = new SwerveEncoder(absoluteEncoderId, absoluteEncoderOffset, absoluteEncoderReversed);
 
         driveMotor = new TalonFX(driveMotorId);
         turningMotor = new TalonFX(turningMotorId);
@@ -55,13 +53,12 @@ public class SwerveModule {
     }
 
     public double getAbsoluteEncoderRad() {
-        double angle = absoluteEncoder.getPosition();
-        return angle * (absoluteEncoderReversed ? -1.0 : 1.0);
+        return absoluteEncoder.getPosition();
     }
 
     public void resetEncoders() {
         driveMotor.setSelectedSensorPosition(0);
-        turningMotor.setSelectedSensorPosition(0);
+        turningMotor.setSelectedSensorPosition(getAbsoluteEncoderRad());
     }
 
     public SwerveModuleState getState() {
@@ -75,8 +72,8 @@ public class SwerveModule {
         }
 
         state = SwerveModuleState.optimize(state, getState().angle);
-        driveMotor.set(ControlMode.Velocity, (state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond)/ModuleConstants.kDriveEncoderRPMS2MeterPerSec);
-        turningMotor.set(ControlMode.Velocity, (turningPidController.calculate(getAbsoluteEncoderRad(), state.angle.getRadians()))/ModuleConstants.kTurningEncoderRPMS2RadPerSec);
+        driveMotor.set(ControlMode.PercentOutput, state.speedMetersPerSecond/ModuleConstants.kTeleDriveMaxSpeedMetersPerSecond);
+        turningMotor.set(ControlMode.PercentOutput, (turningPidController.calculate(getAbsoluteEncoderRad(), state.angle.getRadians()));
         //SmartDashboard.putString("Swerve[" + absoluteEncoder.getChannel() + "] state", state.toString());
     }
 

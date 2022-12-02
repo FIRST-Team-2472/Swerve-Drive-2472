@@ -47,14 +47,14 @@ public final class Constants {
 
         public static final double kDriveAbsoluteEncoderOffsetRad = 2.1;
 
-        public static final double kPhysicalMaxSpeedMetersPerSecond = 3.5;
+        public static final double kPhysicalMaxSpeedMetersPerSecond = 4;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 7 * 2 * Math.PI;
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
                 kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
-        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
+        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = Math.PI/4;
     }
 
     public static final class OIConstants {
