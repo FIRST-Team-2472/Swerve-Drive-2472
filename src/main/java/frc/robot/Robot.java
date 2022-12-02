@@ -27,13 +27,10 @@ import frc.robot.subsystems.SwerveModule;
  */
 public class Robot extends TimedRobot {
   private NetworkTableEntry shuffleEncoder, shuffleTurnEncoder, shuffleAbsoluteEncoder;
-  private SwerveModule wheel1 = new SwerveModule(DriveConstants.kDriveMotorPort, DriveConstants.kTurningMotorPort, DriveConstants.kDriveEncoderReversed, DriveConstants.kTurningEncoderReversed,
-   DriveConstants.kDriveAbsoluteEncoderPort, DriveConstants.kDriveAbsoluteEncoderOffsetRad, DriveConstants.kDriveAbsoluteEncoderReversed);
-  /*private TalonFX driveMotor = new TalonFX(DriveConstants.kDriveMotorPort);
-  private TalonFX turningMotor = new TalonFX(DriveConstants.kTurningMotorPort);
 
-  private SwerveEncoder abosluteEncoder = new SwerveEncoder(DriveConstants.kDriveAbsoluteEncoderPort, DriveConstants.kDriveAbsoluteEncoderOffsetRad);
-  */
+  private SwerveModule swerveModule = new SwerveModule(DriveConstants.kDriveMotorPort, DriveConstants.kTurningMotorPort, DriveConstants.kDriveEncoderReversed, DriveConstants.kTurningEncoderReversed,
+   DriveConstants.kDriveAbsoluteEncoderPort, DriveConstants.kDriveAbsoluteEncoderOffsetRad, DriveConstants.kDriveAbsoluteEncoderReversed);
+
   private Joystick joystick = new Joystick(0);
 
   @Override
@@ -49,14 +46,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    shuffleEncoder.setNumber(wheel1.getDrivePosition());
-    shuffleTurnEncoder.setNumber(wheel1.getTurningPosition());
-    //shuffleAbsoluteEncoder.setNumber(abosluteEncoder.getPosition());
+    shuffleEncoder.setNumber(swerveModule.getDrivePosition());
+    shuffleTurnEncoder.setNumber(swerveModule.getTurningPosition());
+    shuffleAbsoluteEncoder.setNumber(swerveModule.getAbsolutePosition());
   }
 
   @Override
   public void autonomousInit() {
-    wheel1.resetEncoders();
+    swerveModule.resetEncoders();
   }
 
   @Override
@@ -64,12 +61,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    wheel1.resetEncoders();
+    swerveModule.resetEncoders();
   }
 
   @Override
   public void teleopPeriodic() {
-    wheel1.setDesiredState(new SwerveModuleState(3.5, new Rotation2d(0)));
+    swerveModule.setDesiredState(new SwerveModuleState(3.5, new Rotation2d(0)));
 
   }
 
