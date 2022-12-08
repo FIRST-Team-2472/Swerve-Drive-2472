@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    //swerveModule.setDesiredState(new SwerveModuleState(3.5, new Rotation2d(0)));
+    swerveModule.setDesiredState(new SwerveModuleState(2.5, new Rotation2d(0)));
   }
 
   @Override
@@ -64,8 +64,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    swerveModule.setDesiredState(new SwerveModuleState(Math.sqrt(Math.pow(joystick.getX(), 2)+Math.pow(joystick.getY(), 2)), new Rotation2d(Math.atan2(joystick.getY(), joystick.getX())) ));
- 
+    double x = joystick.getX();
+    double y = joystick.getY();
+    if(Math.abs(x) < .1)
+      x = 0;
+    if(Math.abs(y) < .1)
+      y = 0;
+    swerveModule.setDesiredState(new SwerveModuleState(Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2)), new Rotation2d(Math.atan2(y, x)) ));
+    
   }
 
   @Override

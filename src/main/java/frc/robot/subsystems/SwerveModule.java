@@ -6,6 +6,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
@@ -17,6 +20,8 @@ public class SwerveModule {
     private final PIDController turningPidController;
 
     private final SwerveEncoder absoluteEncoder;
+
+    private NetworkTableEntry desiredSpeed, desiredDir;
 
     public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
             int absoluteEncoderId, double absoluteEncoderOffset, boolean absoluteEncoderReversed) {
@@ -31,6 +36,12 @@ public class SwerveModule {
 
         turningPidController = new PIDController(ModuleConstants.kPTurning, 0, 0);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
+
+        ShuffleboardTab programmerBoard = Shuffleboard.getTab("Programmer Board");
+
+        desiredSpeed = programmerBoard.add("Desired Speed:", 0).getEntry();
+        desiredDir = programmerBoard.add("Desired Direction:", 0).getEntry();
+
 
         resetEncoders();
     }
@@ -81,8 +92,8 @@ public class SwerveModule {
         driveMotor.set(ControlMode.PercentOutput, state.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turningMotor.set(ControlMode.PercentOutput, turningPidController.calculate(getAbsolutePosition(), state.angle.getRadians()));
 
-        System.out.println("Speed: " +state.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        System.out.println("Drirection: " + turningPidController.calculate(getAbsolutePosition(), state.angle.getRadians()));
+        desiredSpeed.setNumber(state.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        desiredDir.setNumber(turningPidController.calculate(getAbsolutePosition(), state.angle.getRadians()));
     }
 
     public double getPID(double angle) {
