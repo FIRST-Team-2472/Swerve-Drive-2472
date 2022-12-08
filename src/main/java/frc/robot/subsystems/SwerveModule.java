@@ -80,6 +80,9 @@ public class SwerveModule {
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.set(ControlMode.PercentOutput, state.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turningMotor.set(ControlMode.PercentOutput, turningPidController.calculate(getAbsolutePosition(), state.angle.getRadians()));
+
+        System.out.println("Speed: " +state.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        System.out.println("Drirection: " + turningPidController.calculate(getAbsolutePosition(), state.angle.getRadians()));
     }
 
     public double getPID(double angle) {
