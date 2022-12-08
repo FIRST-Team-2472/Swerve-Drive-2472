@@ -15,8 +15,8 @@ public class SwerveEncoder {
 
     public double getPosition() {
         //converts from 0-360 to -PI to PI then applies abosluteEncoder off set
-        double angle = abosluteEncoder.getAbsolutePosition()/180*Math.PI;
-        angle = (angle * reversed) - offset;
+        double angle = abosluteEncoder.getAbsolutePosition()/180*Math.PI*reversed;
+        angle = angle - offset;
 
         return Math.atan2(Math.sin(angle), Math.cos(angle));
         

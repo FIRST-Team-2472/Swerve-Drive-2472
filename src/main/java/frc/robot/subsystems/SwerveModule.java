@@ -96,9 +96,6 @@ public class SwerveModule {
         desiredDir.setNumber(turningPidController.calculate(getAbsolutePosition(), state.angle.getRadians()));
     }
 
-    public double getPID(double angle) {
-        return turningPidController.calculate(getAbsolutePosition(), angle);
-    }
 
     public void stop() {
         driveMotor.set(ControlMode.PercentOutput, 0);

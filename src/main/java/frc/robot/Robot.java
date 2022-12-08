@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     shuffleEncoder.setNumber(swerveModule.getDrivePosition());
-    shuffleTurnEncoder.setNumber(swerveModule.getPID(0));
+    shuffleTurnEncoder.setNumber(swerveModule.getTurningPosition());
     shuffleAbsoluteEncoder.setNumber(swerveModule.getAbsolutePosition());
   }
 
