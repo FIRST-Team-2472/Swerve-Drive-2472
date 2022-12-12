@@ -22,7 +22,7 @@ import frc.robot.subsystems.SwerveModule;
  * project.
  */
 public class Robot extends TimedRobot {
-  private NetworkTableEntry shuffleEncoder, shuffleTurnEncoder, shuffleAbsoluteEncoder;
+  private NetworkTableEntry shuffleEncoder, shuffleTurnEncoder, shuffleAbsoluteEncoder, velocityFB, rotationalVelocityFB;
 
   private SwerveModule swerveModule = new SwerveModule(DriveConstants.kDriveMotorPort, DriveConstants.kTurningMotorPort, DriveConstants.kDriveEncoderReversed, DriveConstants.kTurningEncoderReversed,
    DriveConstants.kDriveAbsoluteEncoderPort, DriveConstants.kDriveAbsoluteEncoderOffsetRad, DriveConstants.kDriveAbsoluteEncoderReversed);
@@ -38,6 +38,8 @@ public class Robot extends TimedRobot {
     shuffleTurnEncoder = programmerBoard.add("Turning Count", 0).getEntry();
     shuffleAbsoluteEncoder = programmerBoard.add("Absolute Value", 0).getEntry();
 
+    velocityFB = programmerBoard.add("Drive Veloctiy: ", 0).getEntry();
+    rotationalVelocityFB = programmerBoard.add("Angular Velocity: ", 0).getEntry();
   }
 
   @Override
@@ -45,6 +47,9 @@ public class Robot extends TimedRobot {
     shuffleEncoder.setNumber(swerveModule.getDrivePosition());
     shuffleTurnEncoder.setNumber(swerveModule.getTurningPosition());
     shuffleAbsoluteEncoder.setNumber(swerveModule.getAbsolutePosition());
+
+    velocityFB.setNumber(swerveModule.getDriveVelocity());
+    rotationalVelocityFB.setNumber(swerveModule.getTurningVelocity());
   }
 
   @Override
@@ -64,14 +69,25 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    double x = joystick.getX();
-    double y = joystick.getY();
+    double squareX = joystick.getX();
+    double squareY = joystick.getY()*-1;
+
+    double x = squareX*Math.sqrt(1-.5*Math.pow(squareY, 2));
+    double y = squareY*Math.sqrt(1-.5*Math.pow(squareX, 2));
+
     if(Math.abs(x) < .1)
       x = 0;
     if(Math.abs(y) < .1)
       y = 0;
-    swerveModule.setDesiredState(new SwerveModuleState(Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2)), new Rotation2d(Math.atan2(y, x)) ));
     
+    double angle = Math.atan2(y, x);
+    if (angle >= -Math.PI/2.0)
+      angle-=(Math.PI/2.0);
+    else
+      angle= Math.PI +(angle/2.0);
+    
+    swerveModule.setDesiredState(new SwerveModuleState(.25*DriveConstants.kPhysicalMaxSpeedMetersPerSecond*Math.hypot(x, y), new Rotation2d(angle)));
+    System.out.println(angle);
   }
 
   @Override

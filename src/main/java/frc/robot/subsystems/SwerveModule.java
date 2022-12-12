@@ -21,7 +21,7 @@ public class SwerveModule {
 
     private final SwerveEncoder absoluteEncoder;
 
-    private NetworkTableEntry desiredSpeed, desiredDir;
+    private NetworkTableEntry desiredSpeed, desiredAngluarVelocity;
 
     public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
             int absoluteEncoderId, double absoluteEncoderOffset, boolean absoluteEncoderReversed) {
@@ -40,7 +40,7 @@ public class SwerveModule {
         ShuffleboardTab programmerBoard = Shuffleboard.getTab("Programmer Board");
 
         desiredSpeed = programmerBoard.add("Desired Speed:", 0).getEntry();
-        desiredDir = programmerBoard.add("Desired Direction:", 0).getEntry();
+        desiredAngluarVelocity = programmerBoard.add("Desired Angular Velocity: ", 0).getEntry();
 
 
         resetEncoders();
@@ -64,7 +64,7 @@ public class SwerveModule {
 
     public double getTurningVelocity() {
         //measured in revolutions not radians. easier to understand
-        return (driveMotor.getSelectedSensorVelocity()*ModuleConstants.kTurningEncoderRPMS2RadPerSec)/(2*Math.PI);
+        return (turningMotor.getSelectedSensorVelocity()*ModuleConstants.kTurningEncoderRPMS2RadPerSec)/(2*Math.PI);
     }
 
     public double getAbsolutePosition() {
@@ -93,7 +93,7 @@ public class SwerveModule {
         turningMotor.set(ControlMode.PercentOutput, turningPidController.calculate(getAbsolutePosition(), state.angle.getRadians()));
 
         desiredSpeed.setNumber(state.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        desiredDir.setNumber(turningPidController.calculate(getAbsolutePosition(), state.angle.getRadians()));
+        desiredAngluarVelocity.setNumber(turningPidController.calculate(getAbsolutePosition(), state.angle.getRadians()));
     }
 
 
