@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -22,66 +21,33 @@ import frc.robot.Constants.ModuleConstants;
  * project.
  */
 public class Robot extends TimedRobot {
-  private NetworkTableEntry FLdriveS, FLturningS, FLAbsoluteS,
-    BLdriveS, BLturningS, BLAbsoluteS,
-    BRdriveS, BRturningS, BRAbsoluteS,
-    FRdriveS, FRturningS, FRAbsoluteS;
+  private NetworkTableEntry driveS, turningS, absoluteS, driveVelocityS, turningVelocityS;
 
-  private TalonFX FLdriveMotor = new TalonFX(DriveConstants.kFrontLeftDriveMotorPort);
-  private TalonFX FLturningMotor = new TalonFX(DriveConstants.kFrontLeftTurningMotorPort);
-  private SwerveEncoder FLabosluteEncoder = new SwerveEncoder(DriveConstants.kFrontLeftDriveAbsoluteEncoderPort);
-
-  private TalonFX BLdriveMotor = new TalonFX(DriveConstants.kBackLeftDriveMotorPort);
-  private TalonFX BLturningMotor = new TalonFX(DriveConstants.kBackLeftTurningMotorPort);
-  private SwerveEncoder BLabosluteEncoder = new SwerveEncoder(DriveConstants.kBackLeftDriveAbsoluteEncoderPort);
-
-  private TalonFX BRdriveMotor = new TalonFX(DriveConstants.kBackRightDriveMotorPort);
-  private TalonFX BRturningMotor = new TalonFX(DriveConstants.kBackRightTurningMotorPort);
-  private SwerveEncoder BRabosluteEncoder = new SwerveEncoder(DriveConstants.kBackRightDriveAbsoluteEncoderPort);
-
-  private TalonFX FRdriveMotor = new TalonFX(DriveConstants.kFrontRightDriveMotorPort);
-  private TalonFX FRturningMotor = new TalonFX(DriveConstants.kFrontRightTurningMotorPort);
-  private SwerveEncoder FRabosluteEncoder = new SwerveEncoder(DriveConstants.kFrontRightDriveAbsoluteEncoderPort);
+  private TalonFX driveMotor = new TalonFX(DriveConstants.kDriveMotorPort);
+  private TalonFX turningMotor = new TalonFX(DriveConstants.kTurningMotorPort);
+  private SwerveEncoder abosluteEncoder = new SwerveEncoder(DriveConstants.kDriveAbsoluteEncoderPort);
 
   @Override
   public void robotInit() {
 
     ShuffleboardTab programmerBoard = Shuffleboard.getTab("Programmer Board");
 
-    FLdriveS = programmerBoard.add("FL Drive Count", 0).getEntry();
-    FLturningS = programmerBoard.add("FL Turning Count", 0).getEntry();
-    FLAbsoluteS = programmerBoard.add("FL Absolute Value", 0).getEntry();
+    driveS = programmerBoard.add("Drive Count", 0).getEntry();
+    turningS = programmerBoard.add("Turning Count", 0).getEntry();
+    absoluteS = programmerBoard.add("Absolute Value", 0).getEntry();
 
-    BLdriveS = programmerBoard.add("BL Drive Count", 0).getEntry();
-    BLturningS = programmerBoard.add("BL Turning Count", 0).getEntry();
-    BLAbsoluteS = programmerBoard.add("BL Absolute Value", 0).getEntry();
-
-    BRdriveS = programmerBoard.add("BR Drive Count", 0).getEntry();
-    BRturningS = programmerBoard.add("BR Turning Count", 0).getEntry();
-    BRAbsoluteS = programmerBoard.add("BR Absolute Value", 0).getEntry();
-
-    FRdriveS = programmerBoard.add("FR Drive Count", 0).getEntry();
-    FRturningS = programmerBoard.add("FR Turning Count", 0).getEntry();
-    FRAbsoluteS = programmerBoard.add("FR Absolute Value", 0).getEntry();
+    driveVelocityS = programmerBoard.add("Drive Velocity", 0).getEntry();
+    turningVelocityS = programmerBoard.add("Turning Velocity", 0).getEntry();
   }
 
   @Override
   public void robotPeriodic() {
-    FLdriveS.setNumber(FLdriveMotor.getSelectedSensorPosition()*ModuleConstants.kDriveEncoderRot2Meter);
-    FLturningS.setNumber(FLturningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad);
-    FLAbsoluteS.setNumber(FLabosluteEncoder.getPosition());
+    driveS.setNumber(driveMotor.getSelectedSensorPosition()*ModuleConstants.kDriveEncoderRot2Meter);
+    turningS.setNumber(turningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad);
+    absoluteS.setNumber(abosluteEncoder.getPosition());
 
-    BLdriveS.setNumber(BLdriveMotor.getSelectedSensorPosition()*ModuleConstants.kDriveEncoderRot2Meter);
-    BLturningS.setNumber(BLturningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad);
-    BLAbsoluteS.setNumber(BLabosluteEncoder.getPosition());
-
-    BRdriveS.setNumber(BRdriveMotor.getSelectedSensorPosition()*ModuleConstants.kDriveEncoderRot2Meter);
-    BRturningS.setNumber(BRturningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad);
-    BRAbsoluteS.setNumber(BRabosluteEncoder.getPosition());
-
-    FRdriveS.setNumber(FRdriveMotor.getSelectedSensorPosition()*ModuleConstants.kDriveEncoderRot2Meter);
-    FRturningS.setNumber(FRturningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad);
-    FRAbsoluteS.setNumber(FRabosluteEncoder.getPosition());
+    driveVelocityS.setNumber(driveMotor.getSelectedSensorVelocity()*ModuleConstants.kDriveEncoderRPMS2MeterPerSec);
+    turningVelocityS.setNumber(turningMotor.getSelectedSensorVelocity()*ModuleConstants.kTurningEncoderRPMS2RadPerSec);
   }
 
   @Override
@@ -93,22 +59,13 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     
-    FLdriveMotor.setSelectedSensorPosition(0);
-    FLturningMotor.setSelectedSensorPosition(0);
-
-    BLdriveMotor.setSelectedSensorPosition(0);
-    BLturningMotor.setSelectedSensorPosition(0);
-
-    BRdriveMotor.setSelectedSensorPosition(0);
-    BRturningMotor.setSelectedSensorPosition(0);
-
-    FRdriveMotor.setSelectedSensorPosition(0);
-    FRturningMotor.setSelectedSensorPosition(0);
+    driveMotor.setSelectedSensorPosition(0);
+    turningMotor.setSelectedSensorPosition(0);
   }
 
   @Override
   public void teleopPeriodic() {
-
+    turningMotor.set(ControlMode.PercentOutput, .2);
   }
 
   @Override
