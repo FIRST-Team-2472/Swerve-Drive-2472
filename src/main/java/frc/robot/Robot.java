@@ -70,7 +70,7 @@ public class Robot extends TimedRobot {
       x = 0;
     if(Math.abs(y) < .1)
       y = 0;
-    swerveModule.setDesiredState(new SwerveModuleState(Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2)), new Rotation2d(Math.atan2(y, x)) ));
+    swerveModule.setDesiredState(new SwerveModuleState(Math.hypot(x, y), new Rotation2d(Math.atan2(y, x)) ));
     
   }
 
