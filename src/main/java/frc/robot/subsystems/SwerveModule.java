@@ -6,9 +6,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
@@ -21,8 +18,6 @@ public class SwerveModule {
 
     private final SwerveEncoder absoluteEncoder;
 
-    private NetworkTableEntry desiredSpeed, desiredDir;
-
     public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
             int absoluteEncoderId, double absoluteEncoderOffset, boolean absoluteEncoderReversed) {
 
@@ -34,14 +29,10 @@ public class SwerveModule {
         driveMotor.setInverted(driveMotorReversed);
         turningMotor.setInverted(turningMotorReversed);
 
+        //lets us use a PID system for the turning motor
         turningPidController = new PIDController(ModuleConstants.kPTurning, 0, 0);
+        //tells the PID controller that our motor can go from -PI to PI (it can rotate continously)
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
-
-        ShuffleboardTab programmerBoard = Shuffleboard.getTab("Programmer Board");
-
-        desiredSpeed = programmerBoard.add("Desired Speed:", 0).getEntry();
-        desiredDir = programmerBoard.add("Desired Direction:", 0).getEntry();
-
 
         resetEncoders();
     }
@@ -88,12 +79,12 @@ public class SwerveModule {
             return;
         }
 
+        //make the swerve module doesn't ever turn more than 90 degrees instead of 180;
         state = SwerveModuleState.optimize(state, getState().angle);
+        //set the motor drive speed to the speed given in swerveModuleState
         driveMotor.set(ControlMode.PercentOutput, state.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        //uses PID to slow down as it approaches the target ange given in swerveModuleState
         turningMotor.set(ControlMode.PercentOutput, turningPidController.calculate(getAbsolutePosition(), state.angle.getRadians()));
-
-        desiredSpeed.setNumber(state.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        desiredDir.setNumber(turningPidController.calculate(getAbsolutePosition(), state.angle.getRadians()));
     }
 
 

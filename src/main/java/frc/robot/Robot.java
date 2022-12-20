@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 
 /**
@@ -23,7 +24,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled
+    // commands, running already-scheduled commands, removing finished or
+    // interrupted commands,
+    // and running subsystem periodic() methods. This must be called from the
+    // robot's periodic
+    // block in order for anything in the Command-based framework to work.
+    CommandScheduler.getInstance().run();
   }
 
   @Override
@@ -36,7 +44,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-  }
+}
 
   @Override
   public void teleopPeriodic() {
@@ -49,7 +57,10 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {}
 
   @Override
-  public void testInit() {}
+  public void testInit() {
+    // Cancels all running commands at the start of test mode.
+    CommandScheduler.getInstance().cancelAll();
+  }
 
   @Override
   public void testPeriodic() {}

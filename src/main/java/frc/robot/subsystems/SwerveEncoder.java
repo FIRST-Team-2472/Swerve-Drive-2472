@@ -18,6 +18,7 @@ public class SwerveEncoder {
         double angle = abosluteEncoder.getAbsolutePosition()/180*Math.PI*reversed;
         angle = angle - offset;
 
+        //atan2 funtion range in -PI to PI, so it automaticaly converts (needs the sin and cos to) any input angle to that range
         return Math.atan2(Math.sin(angle), Math.cos(angle));
         
     }

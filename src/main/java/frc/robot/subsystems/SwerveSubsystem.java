@@ -15,40 +15,40 @@ import frc.robot.Constants.SensorConstants;
 
 public class SwerveSubsystem extends SubsystemBase {
     private final SwerveModule frontLeft = new SwerveModule(
-                DriveConstants.kFrontLeftDriveMotorPort,
-                DriveConstants.kFrontLeftTurningMotorPort,
-                DriveConstants.kFrontLeftDriveEncoderReversed,
-                DriveConstants.kFrontLeftTurningEncoderReversed,
-                DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
-                DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
-                DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
+            DriveConstants.kFrontLeftDriveMotorPort,
+            DriveConstants.kFrontLeftTurningMotorPort,
+            DriveConstants.kFrontLeftDriveEncoderReversed,
+            DriveConstants.kFrontLeftTurningEncoderReversed,
+            DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
+            DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
+            DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
-        private final SwerveModule frontRight = new SwerveModule(
-                DriveConstants.kFrontRightDriveMotorPort,
-                DriveConstants.kFrontRightTurningMotorPort,
-                DriveConstants.kFrontRightDriveEncoderReversed,
-                DriveConstants.kFrontRightTurningEncoderReversed,
-                DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
-                DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
-                DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
-    
-        private final SwerveModule backLeft = new SwerveModule(
-                DriveConstants.kBackLeftDriveMotorPort,
-                DriveConstants.kBackLeftTurningMotorPort,
-                DriveConstants.kBackLeftDriveEncoderReversed,
-                DriveConstants.kBackLeftTurningEncoderReversed,
-                DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
-                DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
-                DriveConstants.kBackLeftDriveAbsoluteEncoderReversed);
-    
-        private final SwerveModule backRight = new SwerveModule(
-                DriveConstants.kBackRightDriveMotorPort,
-                DriveConstants.kBackRightTurningMotorPort,
-                DriveConstants.kBackRightDriveEncoderReversed,
-                DriveConstants.kBackRightTurningEncoderReversed,
-                DriveConstants.kBackRightDriveAbsoluteEncoderPort,
-                DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
-                DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
+    private final SwerveModule frontRight = new SwerveModule(
+            DriveConstants.kFrontRightDriveMotorPort,
+            DriveConstants.kFrontRightTurningMotorPort,
+            DriveConstants.kFrontRightDriveEncoderReversed,
+            DriveConstants.kFrontRightTurningEncoderReversed,
+            DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
+            DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
+            DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
+
+    private final SwerveModule backLeft = new SwerveModule(
+            DriveConstants.kBackLeftDriveMotorPort,
+            DriveConstants.kBackLeftTurningMotorPort,
+            DriveConstants.kBackLeftDriveEncoderReversed,
+            DriveConstants.kBackLeftTurningEncoderReversed,
+            DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
+            DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
+            DriveConstants.kBackLeftDriveAbsoluteEncoderReversed);
+
+    private final SwerveModule backRight = new SwerveModule(
+            DriveConstants.kBackRightDriveMotorPort,
+            DriveConstants.kBackRightTurningMotorPort,
+            DriveConstants.kBackRightDriveEncoderReversed,
+            DriveConstants.kBackRightTurningEncoderReversed,
+            DriveConstants.kBackRightDriveAbsoluteEncoderPort,
+            DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
+            DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
 
     private final PigeonIMU gyro = new PigeonIMU(SensorConstants.kPigeonID);
     //TODO test if odometer works
@@ -62,6 +62,7 @@ public class SwerveSubsystem extends SubsystemBase {
         headingSB = programmerBoard.add("Robot Heading", 0).getEntry();
         odometerSB = programmerBoard.add("Robot Location", 0).getEntry();
 
+        //zeros heading after pigeon boots up
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -93,6 +94,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        //this method comes from the subsystem class we inherrited. Runs constantly while robot is on
+
         /*odometer.update(getRotation2d(), frontLeft.getState(), frontRight.getState(), backLeft.getState(),
                 backRight.getState());*/
         headingSB.setNumber(getHeading());
@@ -107,7 +110,9 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
+        //if their is speed larger then the physical max speed, it reduces all speeds until they are smaller than physical max speed
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        //sets the modules to desired states
         frontLeft.setDesiredState(desiredStates[0]);
         frontRight.setDesiredState(desiredStates[1]);
         backLeft.setDesiredState(desiredStates[2]);
