@@ -85,11 +85,7 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousInit() {
-    
-    FLdriveMotor.setSelectedSensorPosition(0);
-    FLturningMotor.setSelectedSensorPosition(0);
-  }
+  public void autonomousInit() {}
 
   @Override
   public void autonomousPeriodic() {}
@@ -99,6 +95,15 @@ public class Robot extends TimedRobot {
     
     FLdriveMotor.setSelectedSensorPosition(0);
     FLturningMotor.setSelectedSensorPosition(0);
+
+    BLdriveMotor.setSelectedSensorPosition(0);
+    BLturningMotor.setSelectedSensorPosition(0);
+
+    BRdriveMotor.setSelectedSensorPosition(0);
+    BRturningMotor.setSelectedSensorPosition(0);
+
+    FRdriveMotor.setSelectedSensorPosition(0);
+    FRturningMotor.setSelectedSensorPosition(0);
   }
 
   @Override
