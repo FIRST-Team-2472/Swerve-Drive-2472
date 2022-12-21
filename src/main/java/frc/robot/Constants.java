@@ -19,7 +19,7 @@ public final class Constants {
         public static final double kDriveEncoderRPMS2MeterPerSec = kDriveEncoderRot2Meter*10;
         public static final double kTurningEncoderRPMS2RadPerSec = kTurningEncoderRot2Rad*10;
         //use guess and check to find. when the module is overshooting this needs to be fine tuned
-        public static final double kPTurning = 0.5;
+        public static final double kPTurning = 0.2;
     }
 
     public static final class DriveConstants {
