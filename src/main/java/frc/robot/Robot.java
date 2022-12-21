@@ -4,11 +4,9 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -16,16 +14,19 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the
+ * name of this class or
+ * the package after creating this project, you must also update the
+ * build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
   private NetworkTableEntry FLdriveS, FLturningS, FLAbsoluteS,
-    BLdriveS, BLturningS, BLAbsoluteS,
-    BRdriveS, BRturningS, BRAbsoluteS,
-    FRdriveS, FRturningS, FRAbsoluteS;
+      BLdriveS, BLturningS, BLAbsoluteS,
+      BRdriveS, BRturningS, BRAbsoluteS,
+      FRdriveS, FRturningS, FRAbsoluteS;
 
   private TalonFX FLdriveMotor = new TalonFX(DriveConstants.kFrontLeftDriveMotorPort);
   private TalonFX FLturningMotor = new TalonFX(DriveConstants.kFrontLeftTurningMotorPort);
@@ -67,32 +68,34 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    FLdriveS.setNumber(FLdriveMotor.getSelectedSensorPosition()*ModuleConstants.kDriveEncoderRot2Meter);
-    FLturningS.setNumber(FLturningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad);
+    FLdriveS.setNumber(FLdriveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter);
+    FLturningS.setNumber(FLturningMotor.getSelectedSensorPosition() * ModuleConstants.kTurningEncoderRot2Rad);
     FLAbsoluteS.setNumber(FLabosluteEncoder.getPosition());
 
-    BLdriveS.setNumber(BLdriveMotor.getSelectedSensorPosition()*ModuleConstants.kDriveEncoderRot2Meter);
-    BLturningS.setNumber(BLturningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad);
+    BLdriveS.setNumber(BLdriveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter);
+    BLturningS.setNumber(BLturningMotor.getSelectedSensorPosition() * ModuleConstants.kTurningEncoderRot2Rad);
     BLAbsoluteS.setNumber(BLabosluteEncoder.getPosition());
 
-    BRdriveS.setNumber(BRdriveMotor.getSelectedSensorPosition()*ModuleConstants.kDriveEncoderRot2Meter);
-    BRturningS.setNumber(BRturningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad);
+    BRdriveS.setNumber(BRdriveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter);
+    BRturningS.setNumber(BRturningMotor.getSelectedSensorPosition() * ModuleConstants.kTurningEncoderRot2Rad);
     BRAbsoluteS.setNumber(BRabosluteEncoder.getPosition());
 
-    FRdriveS.setNumber(FRdriveMotor.getSelectedSensorPosition()*ModuleConstants.kDriveEncoderRot2Meter);
-    FRturningS.setNumber(FRturningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad);
+    FRdriveS.setNumber(FRdriveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter);
+    FRturningS.setNumber(FRturningMotor.getSelectedSensorPosition() * ModuleConstants.kTurningEncoderRot2Rad);
     FRAbsoluteS.setNumber(FRabosluteEncoder.getPosition());
   }
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+  }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+  }
 
   @Override
   public void teleopInit() {
-    
+
     FLdriveMotor.setSelectedSensorPosition(0);
     FLturningMotor.setSelectedSensorPosition(0);
 
@@ -112,20 +115,26 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   @Override
-  public void testInit() {}
+  public void testInit() {
+  }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+  }
 
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 }
