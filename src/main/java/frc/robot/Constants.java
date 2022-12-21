@@ -100,6 +100,6 @@ public final class Constants {
 
     public static final class SensorConstants {
         //make a bettter id. 0 is bad
-        public static final int kPigeonID = 0;
+        public static final int kPigeonID = 20;
     }
 }
