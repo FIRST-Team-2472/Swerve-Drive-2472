@@ -50,10 +50,10 @@ public final class Constants {
         public static final boolean kFrontRightTurningEncoderReversed = true;
         public static final boolean kBackRightTurningEncoderReversed = true;
 
-        public static final boolean kFrontLeftDriveEncoderReversed = true;
-        public static final boolean kBackLeftDriveEncoderReversed = true;
-        public static final boolean kFrontRightDriveEncoderReversed = true;
-        public static final boolean kBackRightDriveEncoderReversed = false;
+        public static final boolean kFrontLeftDriveEncoderReversed = false;
+        public static final boolean kBackLeftDriveEncoderReversed = false;
+        public static final boolean kFrontRightDriveEncoderReversed = false;
+        public static final boolean kBackRightDriveEncoderReversed = true;
 
         public static final int kFrontLeftDriveAbsoluteEncoderPort = 21;
         public static final int kBackLeftDriveAbsoluteEncoderPort = 22;
@@ -66,11 +66,11 @@ public final class Constants {
         public static final boolean kFrontRightDriveAbsoluteEncoderReversed = true;
         public static final boolean kBackRightDriveAbsoluteEncoderReversed = true;
 
-        //To find set the motors forward record the value
-        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.01;
-        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = -1.18;
-        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -2.90;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.76;
+        //To find set the motors forward record the value (don't inverse the value)
+        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.00338;
+        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.92515;
+        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -3.0;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -0.43718;
 
         //To find set the modules to 100% and see what speed cap out at
         public static final double kPhysicalMaxSpeedMetersPerSecond = 4;
@@ -91,7 +91,7 @@ public final class Constants {
         //axis and buttons id for drive joysticks
         public static final int kDriverYAxis = 1;
         public static final int kDriverXAxis = 0;
-        public static final int kDriverRotAxis = 3;
+        public static final int kDriverRotAxis = 2;
         public static final int kDriverFieldOrientedButtonIdx = 1;
 
         //area were joysticks will not activate
