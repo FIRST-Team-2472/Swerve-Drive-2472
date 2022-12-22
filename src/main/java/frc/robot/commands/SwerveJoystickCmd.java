@@ -42,6 +42,7 @@ public class SwerveJoystickCmd extends CommandBase {
         double xSpeed = xSpdFunction.get();
         double ySpeed = ySpdFunction.get();
         double turningSpeed = turningSpdFunction.get();
+        //double turningSpeed = 0;
 
         // 2. Apply deadband
         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
@@ -54,8 +55,9 @@ public class SwerveJoystickCmd extends CommandBase {
         turningSpeed = turningLimiter.calculate(turningSpeed)
                 * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
-        // 4. Construct desired chassis speeds (finds the speed of each module base on joystick input)
+        // 4. Construct desired chassis speeds (finds the desired speed of robot on joystick input)
         ChassisSpeeds chassisSpeeds;
+        //have to hold down button for relative to field
         if (fieldOrientedFunction.get()) {
             // Relative to field
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(

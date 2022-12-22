@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -52,8 +53,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private final PigeonIMU gyro = new PigeonIMU(SensorConstants.kPigeonID);
     //TODO test if odometer works
-    /*private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
-            new Rotation2d(0));*/
+    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
+            new Rotation2d(0));
     private NetworkTableEntry headingSB, odometerSB;
 
     public SwerveSubsystem() {
@@ -73,24 +74,25 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void zeroHeading() {
-        gyro.configFactoryDefault();
+        gyro.setYaw(0);
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(gyro.getPitch(), 360);
+        //imu is backwards, so it is multiplied by negative one
+        return -Math.IEEEremainder(gyro.getYaw(), 360);
     }
 
     public Rotation2d getRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
     }
 
-    /*public Pose2d getPose() {
+    public Pose2d getPose() {
         return odometer.getPoseMeters();
     }
 
     public void resetOdometry(Pose2d pose) {
         odometer.resetPosition(pose, getRotation2d());
-    }*/
+    }
 
     @Override
     public void periodic() {
