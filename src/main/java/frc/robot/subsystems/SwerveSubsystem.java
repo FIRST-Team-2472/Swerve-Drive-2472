@@ -55,13 +55,18 @@ public class SwerveSubsystem extends SubsystemBase {
     //TODO test if odometer works
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
             new Rotation2d(0));
-    private NetworkTableEntry headingSB, odometerSB;
+    private NetworkTableEntry headingSB, odometerSB, FLVelocity, FRVelocity, FLAngle, FRAngle;
 
     public SwerveSubsystem() {
         ShuffleboardTab programmerBoard = Shuffleboard.getTab("Programmer Board");
 
         headingSB = programmerBoard.add("Robot Heading", 0).getEntry();
-        odometerSB = programmerBoard.add("Robot Location", 0).getEntry();
+        odometerSB = programmerBoard.add("Robot Location", "").getEntry();
+        FLVelocity = programmerBoard.add("FL Velocity", 0).getEntry();
+        FRVelocity = programmerBoard.add("FR Velocity", 0).getEntry();
+        FLAngle = programmerBoard.add("FL Angle", 0).getEntry();
+        FRAngle = programmerBoard.add("FR Angle", 0).getEntry();
+
 
         //zeros heading after pigeon boots up
         new Thread(() -> {
@@ -98,10 +103,17 @@ public class SwerveSubsystem extends SubsystemBase {
     public void periodic() {
         //this method comes from the subsystem class we inherrited. Runs constantly while robot is on
 
-        /*odometer.update(getRotation2d(), frontLeft.getState(), frontRight.getState(), backLeft.getState(),
-                backRight.getState());*/
+        //changes heading and module states into an x,y corrordanite
+        odometer.update(getRotation2d(), frontLeft.getState(), frontRight.getState(), backLeft.getState(),
+                backRight.getState());
         headingSB.setNumber(getHeading());
-        //odometerSB.setNumber(getPose().getTranslation().toString());
+        odometerSB.setString(getPose().getTranslation().toString());
+
+        //FLVelocity.setNumber(backLeft.getDriveVelocity());
+        FRVelocity.setNumber(backRight.getDriveVelocity());
+
+        //FLAngle.setNumber(backLeft.getAbsolutePosition());
+        FRAngle.setNumber(backRight.getAbsolutePosition());
     }
 
     public void stopModules() {

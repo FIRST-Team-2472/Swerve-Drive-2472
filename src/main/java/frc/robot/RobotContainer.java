@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
@@ -28,5 +29,6 @@ public class RobotContainer {
     private void configureButtonBindings() {
         //reseting button for IMU. Usefull for change field orentation forward direction
         new JoystickButton(driverJoytick, 5).whenPressed(() -> swerveSubsystem.zeroHeading());
+        new JoystickButton(driverJoytick, 3).whenPressed(() -> swerveSubsystem.resetOdometry(new Pose2d()));
     }
 }
