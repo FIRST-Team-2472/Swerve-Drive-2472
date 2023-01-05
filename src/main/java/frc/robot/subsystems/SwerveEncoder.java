@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.sensors.CANCoder;
 
 public class SwerveEncoder {
-    //Abslute encoder for swerve drive module
+    //Absolute encoder for swerve drive module
     private CANCoder abosluteEncoder;
     private double offset, reversed;
 

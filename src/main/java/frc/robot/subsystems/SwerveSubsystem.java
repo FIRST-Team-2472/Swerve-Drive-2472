@@ -55,17 +55,13 @@ public class SwerveSubsystem extends SubsystemBase {
     //TODO test if odometer works
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
             new Rotation2d(0));
-    private NetworkTableEntry headingSB, odometerSB, FLVelocity, FRVelocity, FLAngle, FRAngle;
+    private NetworkTableEntry headingSB, odometerSB;
 
     public SwerveSubsystem() {
         ShuffleboardTab programmerBoard = Shuffleboard.getTab("Programmer Board");
-
+        
         headingSB = programmerBoard.add("Robot Heading", 0).getEntry();
         odometerSB = programmerBoard.add("Robot Location", "").getEntry();
-        FLVelocity = programmerBoard.add("FL Velocity", 0).getEntry();
-        FRVelocity = programmerBoard.add("FR Velocity", 0).getEntry();
-        FLAngle = programmerBoard.add("FL Angle", 0).getEntry();
-        FRAngle = programmerBoard.add("FR Angle", 0).getEntry();
 
 
         //zeros heading after pigeon boots up
@@ -101,19 +97,13 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //this method comes from the subsystem class we inherrited. Runs constantly while robot is on
+        //this method comes from the subsystem class we inherited. Runs constantly while robot is on
 
         //changes heading and module states into an x,y corrordanite
         odometer.update(getRotation2d(), frontLeft.getState(), frontRight.getState(), backLeft.getState(),
                 backRight.getState());
         headingSB.setNumber(getHeading());
         odometerSB.setString(getPose().getTranslation().toString());
-
-        //FLVelocity.setNumber(backLeft.getDriveVelocity());
-        FRVelocity.setNumber(backRight.getDriveVelocity());
-
-        //FLAngle.setNumber(backLeft.getAbsolutePosition());
-        FRAngle.setNumber(backRight.getAbsolutePosition());
     }
 
     public void stopModules() {
@@ -124,7 +114,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        //if their is speed larger then the physical max speed, it reduces all speeds until they are smaller than physical max speed
+        //if their speed is larger then the physical max speed, it reduces all speeds until they are smaller than physical max speed
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         //sets the modules to desired states
         frontLeft.setDesiredState(desiredStates[0]);

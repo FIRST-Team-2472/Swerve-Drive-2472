@@ -43,7 +43,7 @@ public class SwerveModule {
 
     public double getTurningPosition() {
         //Use absolute encoder for most things instead of this
-        //Isn't currently bound to a certian range. Will count up indefintly
+        //Isn't currently bound to a certian range. Will count up indefinitely
 
         //measured in revolutions not radians. easier to understand
         return (turningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad)/(2*Math.PI);

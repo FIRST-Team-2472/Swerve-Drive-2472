@@ -16,7 +16,7 @@ public final class Constants {
         public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters*(1.0/2048.0);
         public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI*(1.0/2048.0);
         
-        //CTRE mesures their velcity in 100ms, so we multiply it by 10 to get 1s
+        //CTRE measures their velocity in 100ms, so we multiply it by 10 to get 1s
         public static final double kDriveEncoderRPMS2MeterPerSec = kDriveEncoderRot2Meter*10;
         public static final double kTurningEncoderRPMS2RadPerSec = kTurningEncoderRot2Rad*10;
         //use guess and check to find. when the module is overshooting this needs to be fine tuned
@@ -73,7 +73,7 @@ public final class Constants {
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.15;
         public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.74;
 
-        //To find set the modules to 100% and see what speed cap out at
+        //To find set the modules to 100% and see what speed caps out at
         public static final double kPhysicalMaxSpeedMetersPerSecond = 4;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 7 * 2 * Math.PI;
 
