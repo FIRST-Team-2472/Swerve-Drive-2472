@@ -51,8 +51,7 @@ public class SwerveJoystickCmd extends CommandBase {
         // 3. Make the driving smoother (limits acceleration)
         xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-        turningSpeed = turningLimiter.calculate(turningSpeed)
-                * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+        turningSpeed = turningLimiter.calculate(turningSpeed) * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
         // 4. Construct desired chassis speeds (finds the desired speed of robot on joystick input)
         ChassisSpeeds chassisSpeeds;

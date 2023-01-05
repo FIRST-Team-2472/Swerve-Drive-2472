@@ -32,6 +32,7 @@ public class RobotContainer {
     public RobotContainer() {
         //sets up the defalt command for the swerve subsystem. Defalut commands run if no other commands are set
         //the () -> are lambda expressions.
+        //lambda is sending over a method
         swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                 swerveSubsystem,
                 () -> driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
@@ -43,6 +44,8 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+        //this buttons sould only only muniplate parts that don't move robot
+        
         //reseting button for IMU. Usefull for change field orentation forward direction
         new JoystickButton(driverJoytick, 1).whenPressed(() -> swerveSubsystem.zeroHeading());
         new JoystickButton(driverJoytick, 2).whenPressed(() -> swerveSubsystem.resetOdometry(new Pose2d()));
@@ -57,11 +60,10 @@ public class RobotContainer {
                         .setKinematics(DriveConstants.kDriveKinematics);
 
         // 2. Generate trajectory
+        //Genrates trajectory need to feed start point, a sereris of inbtween points, and end point
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
                 new Pose2d(0, 0, new Rotation2d(0)),
-                List.of(
-                        new Translation2d(1, 0),
-                        new Translation2d(1, -1)),
+                List.of(new Translation2d(1, 0), new Translation2d(1, -1)),
                 new Pose2d(2, -1, Rotation2d.fromDegrees(180)),
                 trajectoryConfig);
 
@@ -75,6 +77,7 @@ public class RobotContainer {
         // 4. Construct command to follow trajectory
         SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
                 trajectory,
+                //swerveSubsystm::getPose is same as () -> swerveSubsystem.getPose()
                 swerveSubsystem::getPose,
                 DriveConstants.kDriveKinematics,
                 xController,
@@ -84,6 +87,7 @@ public class RobotContainer {
                 swerveSubsystem);
 
         // 5. Add some init and wrap-up, and return everything
+        //creates a Command list that will reset the Odometry, then move the path, then stop
         return new SequentialCommandGroup(
                 new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
                 swerveControllerCommand,
