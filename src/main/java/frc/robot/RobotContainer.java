@@ -11,6 +11,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -26,7 +27,7 @@ public class RobotContainer {
         
     private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
-    private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
+    private final XboxController driverJoytick = new XboxController(OIConstants.kDriverControllerPort);
 
     public RobotContainer() {
         //sets up the defalt command for the swerve subsystem. Defalut commands run if no other commands are set
@@ -43,8 +44,8 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         //reseting button for IMU. Usefull for change field orentation forward direction
-        new JoystickButton(driverJoytick, 5).whenPressed(() -> swerveSubsystem.zeroHeading());
-        new JoystickButton(driverJoytick, 3).whenPressed(() -> swerveSubsystem.resetOdometry(new Pose2d()));
+        new JoystickButton(driverJoytick, 1).whenPressed(() -> swerveSubsystem.zeroHeading());
+        new JoystickButton(driverJoytick, 2).whenPressed(() -> swerveSubsystem.resetOdometry(new Pose2d()));
     }
 
     //generates a path via points
