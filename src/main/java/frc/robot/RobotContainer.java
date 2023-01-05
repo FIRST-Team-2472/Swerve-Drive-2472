@@ -35,9 +35,9 @@ public class RobotContainer {
         //lambda is sending over a method
         swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                 swerveSubsystem,
-                () -> driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
-                () -> -driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
-                () -> -driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
+                () -> -driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
+                () -> driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
+                () -> driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
                 () -> !driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
 
         configureButtonBindings();
@@ -63,8 +63,8 @@ public class RobotContainer {
         //Genrates trajectory need to feed start point, a sereris of inbtween points, and end point
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
                 new Pose2d(0, 0, new Rotation2d(0)),
-                List.of(new Translation2d(1, 0), new Translation2d(1, -1)),
-                new Pose2d(2, -1, Rotation2d.fromDegrees(180)),
+                List.of(new Translation2d(0, .5)),
+                new Pose2d(0, 1, Rotation2d.fromDegrees(90)),
                 trajectoryConfig);
 
         // 3. Define PID controllers for tracking trajectory
