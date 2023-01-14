@@ -11,7 +11,6 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -27,7 +26,8 @@ public class RobotContainer {
         
     private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
-    private final XboxController driverJoytick = new XboxController(OIConstants.kDriverControllerPort);
+    private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
+    private final Joystick secodaryDriverJoystick = new Joystick(OIConstants.kSecondaryDriverControllerPort);
 
     public RobotContainer() {
         //sets up the defalt command for the swerve subsystem. Defalut commands run if no other commands are set
@@ -37,8 +37,8 @@ public class RobotContainer {
                 swerveSubsystem,
                 () -> -driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
                 () -> driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
-                () -> driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
-                () -> !driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+                () -> secodaryDriverJoystick.getRawAxis(OIConstants.kDriverRotAxis),
+                () -> !secodaryDriverJoystick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
 
         configureButtonBindings();
     }
@@ -47,8 +47,8 @@ public class RobotContainer {
         //this buttons sould only only muniplate parts that don't move robot
         
         //reseting button for IMU. Usefull for change field orentation forward direction
-        new JoystickButton(driverJoytick, 1).whenPressed(() -> swerveSubsystem.zeroHeading());
-        new JoystickButton(driverJoytick, 2).whenPressed(() -> swerveSubsystem.resetOdometry(new Pose2d()));
+        new JoystickButton(driverJoytick, 2).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+        new JoystickButton(driverJoytick, 3).onTrue(new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d())));
     }
 
     //generates a path via points

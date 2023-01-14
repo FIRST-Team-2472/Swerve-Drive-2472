@@ -79,7 +79,7 @@ public class SwerveModule {
     // a swerve module state is composed of a speed and direction
     public void setDesiredState(SwerveModuleState state) {
         //prevents wheels from changing direction if it is given barely any speed
-        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
+        if (Math.abs(state.speedMetersPerSecond) < 0.01) {
             stop();
             return;
         }

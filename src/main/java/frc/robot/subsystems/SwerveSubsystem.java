@@ -9,7 +9,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -57,13 +56,14 @@ public class SwerveSubsystem extends SubsystemBase {
     //TODO test if odometer works
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
             new Rotation2d(0),getModulePositions());
-    private GenericEntry headingSB, odometerSB;
+    private GenericEntry headingShuffleBoard, odometerShuffleBoard, rollShuffleBoard;
 
     public SwerveSubsystem() {
         ShuffleboardTab programmerBoard = Shuffleboard.getTab("Programmer Board");
-        
-        headingSB = programmerBoard.add("Robot Heading", 0).getEntry();
-        odometerSB = programmerBoard.add("Robot Location", "").getEntry();
+       
+        headingShuffleBoard = programmerBoard.add("Robot Heading", 0).getEntry();
+        odometerShuffleBoard = programmerBoard.add("Robot Location", "").getEntry();
+        rollShuffleBoard = programmerBoard.add("Robot Roll", 0).getEntry();
 
 
         //zeros heading after pigeon boots up
@@ -85,6 +85,10 @@ public class SwerveSubsystem extends SubsystemBase {
         return -Math.IEEEremainder(gyro.getYaw(), 360);
     }
 
+    public double getRoll() {
+        return gyro.getRoll();
+    }
+
     public Rotation2d getRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
     }
@@ -95,6 +99,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
+        headingShuffleBoard.setDouble(getHeading());
+        odometerShuffleBoard.setString(getPose().getTranslation().toString());
+        rollShuffleBoard.setDouble(getRoll());
     }
 
     @Override
@@ -103,8 +110,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
         //changes heading and module states into an x,y corrordanite
         odometer.update(getRotation2d(), getModulePositions());
-        headingSB.setDouble(getHeading());
-        odometerSB.setString(getPose().getTranslation().toString());
+        headingShuffleBoard.setDouble(getHeading());
+        odometerShuffleBoard.setString(getPose().getTranslation().toString());
+        rollShuffleBoard.setDouble(getRoll());
     }
 
     public SwerveModulePosition[] getModulePositions() {
@@ -121,6 +129,21 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         //if their speed is larger then the physical max speed, it reduces all speeds until they are smaller than physical max speed
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        //sets the modules to desired states
+        frontLeft.setDesiredState(desiredStates[0]);
+        frontRight.setDesiredState(desiredStates[1]);
+        backLeft.setDesiredState(desiredStates[2]);
+        backRight.setDesiredState(desiredStates[3]);
+    }
+
+    public void driveDirection(double speed, double heading) {
+        SwerveModuleState[] desiredStates = new SwerveModuleState[4];
+
+        for (int i = 0; i < 4; i++) {
+            desiredStates[i] = new SwerveModuleState(speed, Rotation2d.fromDegrees(heading));
+        }
+
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         //sets the modules to desired states
         frontLeft.setDesiredState(desiredStates[0]);
