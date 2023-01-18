@@ -20,7 +20,7 @@ public final class Constants {
         public static final double kDriveEncoderRPMS2MeterPerSec = kDriveEncoderRot2Meter*10;
         public static final double kTurningEncoderRPMS2RadPerSec = kTurningEncoderRot2Rad*10;
         //use guess and check to find. when the module is overshooting this needs to be fine tuned
-        public static final double kPTurning = .3;
+        public static final double kPTurning = .45;
     }
 
     public static final class DriveConstants {
@@ -78,7 +78,7 @@ public final class Constants {
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 7 * 2 * Math.PI;
 
         //arbitrary chosen based on what drivers pick
-        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 3;
+        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 2;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
                 kPhysicalMaxAngularSpeedRadiansPerSecond / 8;
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;

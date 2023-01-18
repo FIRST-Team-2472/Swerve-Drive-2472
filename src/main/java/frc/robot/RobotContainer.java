@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.BalanceOnBoardCmd;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -28,6 +29,7 @@ public class RobotContainer {
 
     private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
     private final Joystick secodaryDriverJoystick = new Joystick(OIConstants.kSecondaryDriverControllerPort);
+        private int inverse = 1;
 
     public RobotContainer() {
         //sets up the defalt command for the swerve subsystem. Defalut commands run if no other commands are set
@@ -37,7 +39,7 @@ public class RobotContainer {
                 swerveSubsystem,
                 () -> -driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
                 () -> driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
-                () -> secodaryDriverJoystick.getRawAxis(OIConstants.kDriverRotAxis),
+                () -> secodaryDriverJoystick.getRawAxis(OIConstants.kDriverRotAxis)*inverse,
                 () -> !secodaryDriverJoystick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
 
         configureButtonBindings();
@@ -49,12 +51,15 @@ public class RobotContainer {
         //reseting button for IMU. Usefull for change field orentation forward direction
         new JoystickButton(driverJoytick, 2).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
         new JoystickButton(driverJoytick, 3).onTrue(new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d())));
+        new JoystickButton(secodaryDriverJoystick, 2).onTrue(new InstantCommand(() -> InverseInverse()));
+        //new JoystickButton(driverJoytick, 4).onTrue(new InstantCommand(() -> swerveSubsystem.testTurning()));
     }
 
     //generates a path via points
     public Command getAutonomousCommand() {
+        return new BalanceOnBoardCmd(swerveSubsystem);
         // 1. Create trajectory settings
-        TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+        /*TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
                 AutoConstants.kMaxSpeedMetersPerSecond,
                 AutoConstants.kMaxAccelerationMetersPerSecondSquared)
                         .setKinematics(DriveConstants.kDriveKinematics);
@@ -91,6 +96,10 @@ public class RobotContainer {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
                 swerveControllerCommand,
-                new InstantCommand(() -> swerveSubsystem.stopModules()));
+                new InstantCommand(() -> swerveSubsystem.stopModules()));*/
+    }
+
+    private void InverseInverse() {
+        inverse = inverse*-1;
     }
 }

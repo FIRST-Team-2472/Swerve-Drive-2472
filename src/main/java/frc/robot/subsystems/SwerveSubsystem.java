@@ -53,10 +53,9 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
 
     private final PigeonIMU gyro = new PigeonIMU(SensorConstants.kPigeonID);
-    //TODO test if odometer works
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
             new Rotation2d(0),getModulePositions());
-    private GenericEntry headingShuffleBoard, odometerShuffleBoard, rollShuffleBoard;
+    private GenericEntry headingShuffleBoard, odometerShuffleBoard, rollShuffleBoard, pitchShuffleBoard, trueAngleShuffleBoard;
 
     public SwerveSubsystem() {
         ShuffleboardTab programmerBoard = Shuffleboard.getTab("Programmer Board");
@@ -64,6 +63,8 @@ public class SwerveSubsystem extends SubsystemBase {
         headingShuffleBoard = programmerBoard.add("Robot Heading", 0).getEntry();
         odometerShuffleBoard = programmerBoard.add("Robot Location", "").getEntry();
         rollShuffleBoard = programmerBoard.add("Robot Roll", 0).getEntry();
+        pitchShuffleBoard = programmerBoard.add("Robot Pitch", 0).getEntry();
+        trueAngleShuffleBoard = programmerBoard.add("Robot Angle", 0).getEntry();
 
 
         //zeros heading after pigeon boots up
@@ -86,7 +87,15 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getRoll() {
-        return gyro.getRoll();
+        return -gyro.getRoll();
+    }
+
+    public double getPitch() {
+        return gyro.getPitch();
+    }
+
+    public double getTiltAngle() {
+        return ((90-getHeading())/90)*getRoll()+(getHeading()/90)*getPitch();
     }
 
     public Rotation2d getRotation2d() {
@@ -99,9 +108,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
-        headingShuffleBoard.setDouble(getHeading());
-        odometerShuffleBoard.setString(getPose().getTranslation().toString());
-        rollShuffleBoard.setDouble(getRoll());
     }
 
     @Override
@@ -113,6 +119,11 @@ public class SwerveSubsystem extends SubsystemBase {
         headingShuffleBoard.setDouble(getHeading());
         odometerShuffleBoard.setString(getPose().getTranslation().toString());
         rollShuffleBoard.setDouble(getRoll());
+
+        pitchShuffleBoard.setDouble(getPitch());
+        trueAngleShuffleBoard.setDouble(getTiltAngle());
+
+
     }
 
     public SwerveModulePosition[] getModulePositions() {
@@ -150,5 +161,12 @@ public class SwerveSubsystem extends SubsystemBase {
         frontRight.setDesiredState(desiredStates[1]);
         backLeft.setDesiredState(desiredStates[2]);
         backRight.setDesiredState(desiredStates[3]);
+    }
+
+    public void resetEncoders() {
+        frontLeft.resetEncoders();
+        frontRight.resetEncoders();
+        backLeft.resetEncoders();
+        backRight.resetEncoders();
     }
 }
