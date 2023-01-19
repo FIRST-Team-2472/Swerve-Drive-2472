@@ -84,11 +84,13 @@ public final class Constants {
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = Math.PI/3;
 
+        //for balancing command
         public static final double kBoardBalancedGoalDegrees = 0;
         public static final double kBoardBalancedAngleThresholdDegrees = 1;
         public static final double kBoardBalancedSpeed = 1.5;
         public static final double kBoardBalancedDriveKP = -1;
         public static final double kBoardBalancedDriveKD = -1;
+        public static final double balanceCounter = 5000;
     }
 
     public static final class AutoConstants {

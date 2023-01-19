@@ -91,11 +91,11 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getPitch() {
-        return gyro.getPitch();
+        return -gyro.getPitch();
     }
 
-    public double getTiltAngle() {
-        return ((90-getHeading())/90)*getRoll()+(getHeading()/90)*getPitch();
+    public double getTrueAngle() {
+        return getPitch()*Math.sin(getHeading()/180*Math.PI)+getRoll()*Math.cos(getHeading()/180*Math.PI);
     }
 
     public Rotation2d getRotation2d() {
@@ -121,7 +121,7 @@ public class SwerveSubsystem extends SubsystemBase {
         rollShuffleBoard.setDouble(getRoll());
 
         pitchShuffleBoard.setDouble(getPitch());
-        trueAngleShuffleBoard.setDouble(getTiltAngle());
+        trueAngleShuffleBoard.setDouble(getTrueAngle());
 
 
     }
