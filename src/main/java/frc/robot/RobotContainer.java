@@ -11,7 +11,6 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -20,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.BalanceOnBoardCmd;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -28,7 +28,9 @@ public class RobotContainer {
     private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
         private final CommandSequences commandSequences = new CommandSequences();
 
-    private final XboxController driverJoytick = new XboxController(OIConstants.kDriverControllerPort);
+    private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
+    private final Joystick secodaryDriverJoystick = new Joystick(OIConstants.kSecondaryDriverControllerPort);
+        private int inverse = 1;
 
     public RobotContainer() {
         //sets up the defalt command for the swerve subsystem. Defalut commands run if no other commands are set
@@ -38,8 +40,8 @@ public class RobotContainer {
                 swerveSubsystem,
                 () -> -driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
                 () -> driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
-                () -> driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
-                () -> !driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+                () -> secodaryDriverJoystick.getRawAxis(OIConstants.kDriverRotAxis)*inverse,
+                () -> !secodaryDriverJoystick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
 
         configureButtonBindings();
     }

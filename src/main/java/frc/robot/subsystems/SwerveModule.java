@@ -27,6 +27,9 @@ public class SwerveModule {
         driveMotor = new TalonFX(driveMotorId);
         turningMotor = new TalonFX(turningMotorId);
 
+        driveMotor.configFactoryDefault();
+        turningMotor.configFactoryDefault();
+
         driveMotor.setInverted(driveMotorReversed);
         turningMotor.setInverted(turningMotorReversed);
 
@@ -43,11 +46,10 @@ public class SwerveModule {
     }
 
     public double getTurningPosition() {
-        //Use absolute encoder for most things instead of this
-        //Isn't currently bound to a certian range. Will count up indefinitely
-
         //measured in revolutions not radians. easier to understand
-        return (turningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad)/(2*Math.PI);
+        double angle = turningMotor.getSelectedSensorPosition()*ModuleConstants.kTurningEncoderRot2Rad;
+
+        return Math.atan2(Math.sin(angle), Math.cos(angle));
     }
 
     public double getDriveVelocity() {
@@ -56,7 +58,7 @@ public class SwerveModule {
 
     public double getTurningVelocity() {
         //measured in revolutions not radians. easier to understand
-        return (driveMotor.getSelectedSensorVelocity()*ModuleConstants.kTurningEncoderRPMS2RadPerSec)/(2*Math.PI);
+        return turningMotor.getSelectedSensorVelocity()*ModuleConstants.kTurningEncoderRPMS2RadPerSec;
     }
 
     public double getAbsolutePosition() {
@@ -65,7 +67,8 @@ public class SwerveModule {
 
     public void resetEncoders() {
         driveMotor.setSelectedSensorPosition(0);
-        turningMotor.setSelectedSensorPosition(0);
+        //turning encoder is synched up with absolute encoder becuase the turning encoder is more accurate
+        turningMotor.setSelectedSensorPosition(getAbsolutePosition()/ModuleConstants.kTurningEncoderRot2Rad);
     }
 
     public SwerveModuleState getState() {
@@ -79,7 +82,7 @@ public class SwerveModule {
     // a swerve module state is composed of a speed and direction
     public void setDesiredState(SwerveModuleState state) {
         //prevents wheels from changing direction if it is given barely any speed
-        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
+        if (Math.abs(state.speedMetersPerSecond) < 0.01) {
             stop();
             return;
         }
@@ -91,7 +94,6 @@ public class SwerveModule {
         //uses PID to slow down as it approaches the target ange given in swerveModuleState
         turningMotor.set(ControlMode.PercentOutput, turningPidController.calculate(getAbsolutePosition(), state.angle.getRadians()));
     }
-
 
     public void stop() {
         driveMotor.set(ControlMode.PercentOutput, 0);

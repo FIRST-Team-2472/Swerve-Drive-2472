@@ -7,8 +7,8 @@ public class SwerveEncoder {
     private CANCoder abosluteEncoder;
     private double offset, reversed;
 
-    public SwerveEncoder(int ID, double offset, boolean reversed) {
-        abosluteEncoder = new CANCoder(ID);
+    public SwerveEncoder(int absoluteEcndoderID, double offset, boolean reversed) {
+        abosluteEncoder = new CANCoder(absoluteEcndoderID);
         this.offset = offset;
         this.reversed = (reversed ? -1.0 : 1.0);
     }

@@ -9,7 +9,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -54,16 +53,18 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
 
     private final PigeonIMU gyro = new PigeonIMU(SensorConstants.kPigeonID);
-    //TODO test if odometer works
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
             new Rotation2d(0),getModulePositions());
-    private GenericEntry headingSB, odometerSB;
+    private GenericEntry headingShuffleBoard, odometerShuffleBoard, rollShuffleBoard, pitchShuffleBoard, trueAngleShuffleBoard;
 
     public SwerveSubsystem() {
         ShuffleboardTab programmerBoard = Shuffleboard.getTab("Programmer Board");
-        
-        headingSB = programmerBoard.add("Robot Heading", 0).getEntry();
-        odometerSB = programmerBoard.add("Robot Location", "").getEntry();
+       
+        headingShuffleBoard = programmerBoard.add("Robot Heading", 0).getEntry();
+        odometerShuffleBoard = programmerBoard.add("Robot Location", "").getEntry();
+        rollShuffleBoard = programmerBoard.add("Robot Roll", 0).getEntry();
+        pitchShuffleBoard = programmerBoard.add("Robot Pitch", 0).getEntry();
+        trueAngleShuffleBoard = programmerBoard.add("Robot Angle", 0).getEntry();
 
 
         //zeros heading after pigeon boots up
@@ -85,6 +86,18 @@ public class SwerveSubsystem extends SubsystemBase {
         return -Math.IEEEremainder(gyro.getYaw(), 360);
     }
 
+    public double getRoll() {
+        return -gyro.getRoll();
+    }
+
+    public double getPitch() {
+        return -gyro.getPitch();
+    }
+
+    public double getTrueAngle() {
+        return getPitch()*Math.sin(getHeading()/180*Math.PI)+getRoll()*Math.cos(getHeading()/180*Math.PI);
+    }
+
     public Rotation2d getRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
     }
@@ -103,8 +116,14 @@ public class SwerveSubsystem extends SubsystemBase {
 
         //changes heading and module states into an x,y corrordanite
         odometer.update(getRotation2d(), getModulePositions());
-        headingSB.setDouble(getHeading());
-        odometerSB.setString(getPose().getTranslation().toString());
+        headingShuffleBoard.setDouble(getHeading());
+        odometerShuffleBoard.setString(getPose().getTranslation().toString());
+        rollShuffleBoard.setDouble(getRoll());
+
+        pitchShuffleBoard.setDouble(getPitch());
+        trueAngleShuffleBoard.setDouble(getTrueAngle());
+
+
     }
 
     public SwerveModulePosition[] getModulePositions() {
@@ -127,5 +146,27 @@ public class SwerveSubsystem extends SubsystemBase {
         frontRight.setDesiredState(desiredStates[1]);
         backLeft.setDesiredState(desiredStates[2]);
         backRight.setDesiredState(desiredStates[3]);
+    }
+
+    public void driveDirection(double speed, double heading) {
+        SwerveModuleState[] desiredStates = new SwerveModuleState[4];
+
+        for (int i = 0; i < 4; i++) {
+            desiredStates[i] = new SwerveModuleState(speed, Rotation2d.fromDegrees(heading));
+        }
+
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        //sets the modules to desired states
+        frontLeft.setDesiredState(desiredStates[0]);
+        frontRight.setDesiredState(desiredStates[1]);
+        backLeft.setDesiredState(desiredStates[2]);
+        backRight.setDesiredState(desiredStates[3]);
+    }
+
+    public void resetEncoders() {
+        frontLeft.resetEncoders();
+        frontRight.resetEncoders();
+        backLeft.resetEncoders();
+        backRight.resetEncoders();
     }
 }

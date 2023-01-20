@@ -20,7 +20,7 @@ public final class Constants {
         public static final double kDriveEncoderRPMS2MeterPerSec = kDriveEncoderRot2Meter*10;
         public static final double kTurningEncoderRPMS2RadPerSec = kTurningEncoderRot2Rad*10;
         //use guess and check to find. when the module is overshooting this needs to be fine tuned
-        public static final double kPTurning = 0.45;
+        public static final double kPTurning = .45;
     }
 
     public static final class DriveConstants {
@@ -78,11 +78,19 @@ public final class Constants {
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 7 * 2 * Math.PI;
 
         //arbitrary chosen based on what drivers pick
-        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 3;
+        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 2;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
                 kPhysicalMaxAngularSpeedRadiansPerSecond / 8;
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = Math.PI/3;
+
+        //for balancing command
+        public static final double kBoardBalancedGoalDegrees = 0;
+        public static final double kBoardBalancedAngleThresholdDegrees = 1;
+        public static final double kBoardBalancedSpeed = 1.5;
+        public static final double kBoardBalancedDriveKP = -1;
+        public static final double kBoardBalancedDriveKD = -1;
+        public static final double balanceCounter = 5000;
     }
 
     public static final class AutoConstants {
@@ -104,12 +112,15 @@ public final class Constants {
     public static final class OIConstants {
         //joystick id
         public static final int kDriverControllerPort = 0;
+        public static final int kSecondaryDriverControllerPort = 1;
 
         //axis and buttons id for drive joysticks
         public static final int kDriverYAxis = 1;
         public static final int kDriverXAxis = 0;
-        public static final int kDriverRotAxis = 1;
-        public static final int kDriverFieldOrientedButtonIdx = 4;
+
+        //buttons for secodary joystick
+        public static final int kDriverRotAxis = 0;
+        public static final int kDriverFieldOrientedButtonIdx = 1;
 
         //area were joysticks will not activate
         public static final double kDeadband = 0.1;
