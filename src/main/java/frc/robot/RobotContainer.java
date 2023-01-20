@@ -50,8 +50,8 @@ public class RobotContainer {
         //this buttons sould only only muniplate parts that don't move robot
         
         //reseting button for IMU. Usefull for change field orentation forward direction
-        new JoystickButton(driverJoytick, 1).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
-        new JoystickButton(driverJoytick, 2).onTrue(new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d())));
+        new JoystickButton(driverJoytick, 2).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+        new JoystickButton(driverJoytick, 3).onTrue(new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d())));
     }
 
     //generates a path via points

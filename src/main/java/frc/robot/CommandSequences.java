@@ -39,6 +39,7 @@ public class CommandSequences {
                 endPoint,
                 trajectoryConfig);
 
+
         // 3. Define PID controllers for tracking trajectory
         PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
         PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
@@ -61,21 +62,19 @@ public class CommandSequences {
         // 5. Add some init and wrap-up, and return everything
         //creates a Command list that will reset the Odometry, then move the path, then stop
         return new SequentialCommandGroup(
+                new InstantCommand(() -> swerveSubsystem.zeroHeading()),
                 new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
                 swerveControllerCommand,
                 new InstantCommand(() -> swerveSubsystem.stopModules()));
     }
 
-    public Command driveStrait(SwerveSubsystem swerveSubsystem, Double distance) {
-        return genratePath(swerveSubsystem, List.of(new Translation2d(0,0)), null);
-    }
 
 
     public Command autonomousExample( SwerveSubsystem swerveSubsystem) {
-        return new SequentialCommandGroup(genratePath(swerveSubsystem, List.of(), new Pose2d(Units.inchesToMeters(16),Units.inchesToMeters(200), new Rotation2d(180))),
-        driveStrait(swerveSubsystem, Units.inchesToMeters(24)),
-        genratePath(swerveSubsystem, List.of(), new Pose2d(Units.inchesToMeters(38.2),Units.inchesToMeters(76.19), new Rotation2d(180))),
-        driveStrait(swerveSubsystem, Units.inchesToMeters(36.06)));
+        return new SequentialCommandGroup(genratePath(swerveSubsystem, List.of(), new Pose2d(Units.inchesToMeters(-200),Units.inchesToMeters(16),Rotation2d.fromDegrees(180))),
+        genratePath(swerveSubsystem, List.of(), new Pose2d(Units.inchesToMeters(-20),Units.inchesToMeters(0), new Rotation2d(0))),
+        genratePath(swerveSubsystem, List.of(), new Pose2d(Units.inchesToMeters(76.19),Units.inchesToMeters(38.2), new Rotation2d(0))),
+        genratePath(swerveSubsystem, List.of(), new Pose2d(Units.inchesToMeters(36.06),Units.inchesToMeters(0), new Rotation2d(0))));
     }
 
  
