@@ -91,18 +91,16 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getPitch() {
-        return -gyro.getPitch();
+        return gyro.getPitch();
     }
 
     public double getTrueAngle() {
-        if (getRoll() <= 85 && getRoll() >= 95) {
-            return (180/Math.PI)*((Math.PI/2)*(1/Math.cos(getHeading()/180*Math.PI))*Math.tan(getRoll()));
-        }
-        else {
-            
-            return (180/Math.PI)*((Math.PI/2)*(1/Math.cos(getHeading()/180*Math.PI+Math.PI/2))*Math.tan(getPitch()));
-        }
-        //return getPitch()*Math.sin(getHeading()/180*Math.PI)+getRoll()*Math.cos(getHeading()/180*Math.PI);
+        //Gets the true angle of the balancing platform if robot is at an angle on the platform.
+        if ((getHeading() >= -45 && getHeading() <= 45) || getHeading() <= -135 || getHeading() >= 135) 
+            //Calculation for balancing near 0, 180, and -180 but is inaccurate at 90 and -90 degrees of Yaw.
+            return (180/Math.PI)*Math.atan((1/(Math.cos(getHeading()/180*Math.PI)))*Math.tan(getRoll()/180*Math.PI));
+        //Alternate calculation for balancing near 90 and -90 but is inaccurate at 0, 180, and -180 degrees of Yaw.
+        return (180/Math.PI)*Math.atan((1/(Math.cos(getHeading()/180*Math.PI+Math.PI/2)))*Math.tan(getPitch()/180*Math.PI));
     }
 
     public Rotation2d getRotation2d() {
