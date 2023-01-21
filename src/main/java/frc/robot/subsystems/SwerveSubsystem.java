@@ -95,7 +95,14 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getTrueAngle() {
-        return getPitch()*Math.sin(getHeading()/180*Math.PI)+getRoll()*Math.cos(getHeading()/180*Math.PI);
+        if (getRoll() <= 85 && getRoll() >= 95) {
+            return (180/Math.PI)*((Math.PI/2)*(1/Math.cos(getHeading()/180*Math.PI))*Math.tan(getRoll()));
+        }
+        else {
+            
+            return (180/Math.PI)*((Math.PI/2)*(1/Math.cos(getHeading()/180*Math.PI+Math.PI/2))*Math.tan(getPitch()));
+        }
+        //return getPitch()*Math.sin(getHeading()/180*Math.PI)+getRoll()*Math.cos(getHeading()/180*Math.PI);
     }
 
     public Rotation2d getRotation2d() {
