@@ -86,10 +86,10 @@ public final class Constants {
 
         //for balancing command
         public static final double kBoardBalancedGoalDegrees = 0;
-        public static final double kBoardBalancedAngleThresholdDegrees = 1;
-        public static final double kBoardBalancedSpeed = 1.5;
-        public static final double kBoardBalancedDriveKP = -1;
-        public static final double kBoardBalancedDriveKD = -1;
+        public static final double kBoardBalancedAngleThresholdDegrees = 2;
+        public static final double kBoardBalancedSpeed = 1;
+        public static final double kBoardBalancedDriveKP = .03;
+        public static final double kBoardBalancedDriveKD = .0075;
         public static final double balanceCounter = 5000;
     }
 

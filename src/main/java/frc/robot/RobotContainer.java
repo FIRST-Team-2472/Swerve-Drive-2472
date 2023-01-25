@@ -1,23 +1,10 @@
 package frc.robot;
 
-import java.util.List;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.BalanceOnBoardCmd;
 import frc.robot.commands.SwerveJoystickCmd;
@@ -50,12 +37,14 @@ public class RobotContainer {
         //this buttons sould only only muniplate parts that don't move robot
         
         //reseting button for IMU. Usefull for change field orentation forward direction
+        new JoystickButton(driverJoytick, 1).onTrue(getAutonomousCommand());
         new JoystickButton(driverJoytick, 2).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
         new JoystickButton(driverJoytick, 3).onTrue(new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d())));
     }
 
     //generates a path via points
     public Command getAutonomousCommand() {
-        return commandSequences.autonomousExample(swerveSubsystem);
+        return new BalanceOnBoardCmd(swerveSubsystem);
+        //return commandSequences.autonomousExample(swerveSubsystem);
     }
 }
