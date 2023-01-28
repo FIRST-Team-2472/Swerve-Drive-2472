@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -23,7 +24,7 @@ import frc.robot.Constants.ModuleConstants;
  * project.
  */
 public class Robot extends TimedRobot {
-  private NetworkTableEntry FLdriveS, FLturningS, FLAbsoluteS,
+  private GenericEntry FLdriveS, FLturningS, FLAbsoluteS,
       BLdriveS, BLturningS, BLAbsoluteS,
       BRdriveS, BRturningS, BRAbsoluteS,
       FRdriveS, FRturningS, FRAbsoluteS;
@@ -68,21 +69,21 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    FLdriveS.setNumber(FLdriveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter);
-    FLturningS.setNumber(FLturningMotor.getSelectedSensorPosition() * ModuleConstants.kTurningEncoderRot2Rad);
-    FLAbsoluteS.setNumber(FLabosluteEncoder.getPosition());
+    FLdriveS.setDouble(FLdriveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter);
+    FLturningS.setDouble(FLturningMotor.getSelectedSensorPosition() * ModuleConstants.kTurningEncoderRot2Rad);
+    FLAbsoluteS.setDouble(FLabosluteEncoder.getPosition());
 
-    BLdriveS.setNumber(BLdriveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter);
-    BLturningS.setNumber(BLturningMotor.getSelectedSensorPosition() * ModuleConstants.kTurningEncoderRot2Rad);
-    BLAbsoluteS.setNumber(BLabosluteEncoder.getPosition());
+    BLdriveS.setDouble(BLdriveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter);
+    BLturningS.setDouble(BLturningMotor.getSelectedSensorPosition() * ModuleConstants.kTurningEncoderRot2Rad);
+    BLAbsoluteS.setDouble(BLabosluteEncoder.getPosition());
 
-    BRdriveS.setNumber(BRdriveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter);
-    BRturningS.setNumber(BRturningMotor.getSelectedSensorPosition() * ModuleConstants.kTurningEncoderRot2Rad);
-    BRAbsoluteS.setNumber(BRabosluteEncoder.getPosition());
+    BRdriveS.setDouble(BRdriveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter);
+    BRturningS.setDouble(BRturningMotor.getSelectedSensorPosition() * ModuleConstants.kTurningEncoderRot2Rad);
+    BRAbsoluteS.setDouble(BRabosluteEncoder.getPosition());
 
-    FRdriveS.setNumber(FRdriveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter);
-    FRturningS.setNumber(FRturningMotor.getSelectedSensorPosition() * ModuleConstants.kTurningEncoderRot2Rad);
-    FRAbsoluteS.setNumber(FRabosluteEncoder.getPosition());
+    FRdriveS.setDouble(FRdriveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter);
+    FRturningS.setDouble(FRturningMotor.getSelectedSensorPosition() * ModuleConstants.kTurningEncoderRot2Rad);
+    FRAbsoluteS.setDouble(FRabosluteEncoder.getPosition());
   }
 
   @Override
