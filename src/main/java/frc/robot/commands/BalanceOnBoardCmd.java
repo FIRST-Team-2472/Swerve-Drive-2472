@@ -47,7 +47,7 @@ public class BalanceOnBoardCmd extends CommandBase {
   public boolean isFinished() {
     if (Math.abs(swerveSubsystem.getTrueAngle()) < DriveConstants.kBoardBalancedAngleThresholdDegrees) {
       timer--;
-      return timer == 0; // End the command when we are within the specified threshold of being 'flat' (gyroscope pitch of 0 degrees)
+      return timer <= 0; // End the command when we are within the specified threshold of being 'flat' (gyroscope pitch of 0 degrees)
     }
     timer = DriveConstants.balanceCounter;
     return false;
