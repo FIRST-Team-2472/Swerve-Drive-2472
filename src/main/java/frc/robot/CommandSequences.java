@@ -34,7 +34,7 @@ public class CommandSequences {
         // 2. Generate trajectory
         //Genrates trajectory need to feed start point, a sereris of inbtween points, and end point
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-                new Pose2d(0, 0, new Rotation2d(0)),
+                swerveSubsystem.getPose(),
                 midPoints,
                 endPoint,
                 trajectoryConfig);
@@ -63,7 +63,6 @@ public class CommandSequences {
         //creates a Command list that will reset the Odometry, then move the path, then stop
         return new SequentialCommandGroup(
                 new InstantCommand(() -> swerveSubsystem.zeroHeading()),
-                new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
                 swerveControllerCommand,
                 new InstantCommand(() -> swerveSubsystem.stopModules()));
     }
@@ -75,6 +74,24 @@ public class CommandSequences {
         genratePath(swerveSubsystem, List.of(), new Pose2d(Units.inchesToMeters(-20),Units.inchesToMeters(0), new Rotation2d(0))),
         genratePath(swerveSubsystem, List.of(), new Pose2d(Units.inchesToMeters(76.19),Units.inchesToMeters(38.2), new Rotation2d(0))),
         genratePath(swerveSubsystem, List.of(), new Pose2d(Units.inchesToMeters(36.06),Units.inchesToMeters(0), new Rotation2d(0))));
+    }
+
+    public Command testAuto1( SwerveSubsystem swerveSubsystem) {
+        return new SequentialCommandGroup(
+        genratePath(swerveSubsystem, List.of(), new Pose2d(2.87,0.53,Rotation2d.fromDegrees(0))),
+        genratePath(swerveSubsystem, List.of(new Translation2d(2.85,0.92), new Translation2d(7.09,0.92),
+                new Translation2d(5.57,2.24)), new Pose2d(3.91,2.24, new Rotation2d(180))),
+        genratePath(swerveSubsystem, List.of(), new Pose2d(3.91,2.24, new Rotation2d(0))));
+    }
+
+    public Command testAuto2( SwerveSubsystem swerveSubsystem) {
+        return new SequentialCommandGroup(
+        genratePath(swerveSubsystem, List.of(), new Pose2d(2.87,0.53,Rotation2d.fromDegrees(0))),
+        genratePath(swerveSubsystem, List.of(), new Pose2d(2.85,0.92, new Rotation2d(180))),
+        genratePath(swerveSubsystem, List.of(), new Pose2d(7.09,0.92, new Rotation2d(180))),
+        genratePath(swerveSubsystem, List.of(), new Pose2d(5.57,2.24, new Rotation2d(180))),
+        genratePath(swerveSubsystem, List.of(), new Pose2d(3.91,2.24, new Rotation2d(180))),
+        genratePath(swerveSubsystem, List.of(), new Pose2d(3.91,2.24, new Rotation2d(0))));
     }
 
  
