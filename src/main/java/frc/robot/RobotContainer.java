@@ -44,7 +44,6 @@ public class RobotContainer {
 
     //generates a path via points
     public Command getAutonomousCommand() {
-        return new BalanceOnBoardCmd(swerveSubsystem);
-        //return commandSequences.autonomousExample(swerveSubsystem);
+        return commandSequences.testAuto1(swerveSubsystem);
     }
 }

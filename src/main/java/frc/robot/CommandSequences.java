@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class CommandSequences {
     
     //generates a path via points
-    public Command genratePath(SwerveSubsystem swerveSubsystem, List<Translation2d> midPoints, Pose2d endPoint) {
+    private Command genratePath(SwerveSubsystem swerveSubsystem, List<Translation2d> midPoints, Pose2d endPoint) {
         // 1. Create trajectory settings
         TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
                 AutoConstants.kMaxSpeedMetersPerSecond,
@@ -62,7 +62,6 @@ public class CommandSequences {
         // 5. Add some init and wrap-up, and return everything
         //creates a Command list that will reset the Odometry, then move the path, then stop
         return new SequentialCommandGroup(
-                new InstantCommand(() -> swerveSubsystem.zeroHeading()),
                 swerveControllerCommand,
                 new InstantCommand(() -> swerveSubsystem.stopModules()));
     }
@@ -78,10 +77,10 @@ public class CommandSequences {
 
     public Command testAuto1( SwerveSubsystem swerveSubsystem) {
         return new SequentialCommandGroup(
-        genratePath(swerveSubsystem, List.of(), new Pose2d(2.87,0.53,Rotation2d.fromDegrees(0))),
-        genratePath(swerveSubsystem, List.of(new Translation2d(2.85,0.92), new Translation2d(7.09,0.92),
-                new Translation2d(5.57,2.24)), new Pose2d(3.91,2.24, new Rotation2d(180))),
-        genratePath(swerveSubsystem, List.of(), new Pose2d(3.91,2.24, new Rotation2d(0))));
+                new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(new Translation2d(1.87, .53), Rotation2d.fromDegrees(0)))),
+                new InstantCommand(() -> swerveSubsystem.zeroHeading()),
+                genratePath(swerveSubsystem, List.of(new Translation2d(2.85,0.92)), new Pose2d(7.09,0.92, Rotation2d.fromDegrees(180))));
+                //genratePath(swerveSubsystem, List.of(new Translation2d(5.57,2.24)), new Pose2d(3.91,2.24, new Rotation2d(0))));
     }
 
     public Command testAuto2( SwerveSubsystem swerveSubsystem) {
