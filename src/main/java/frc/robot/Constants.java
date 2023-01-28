@@ -51,7 +51,7 @@ public final class Constants {
         public static final boolean kFrontRightTurningEncoderReversed = true;
         public static final boolean kBackRightTurningEncoderReversed = true;
 
-        public static final boolean kFrontLeftDriveEncoderReversed = true;
+        public static final boolean kFrontLeftDriveEncoderReversed = false;
         public static final boolean kBackLeftDriveEncoderReversed = true;
         public static final boolean kFrontRightDriveEncoderReversed = true;
         public static final boolean kBackRightDriveEncoderReversed = true;
@@ -68,10 +68,10 @@ public final class Constants {
         public static final boolean kBackRightDriveAbsoluteEncoderReversed = true;
 
         //To find set the motors forward record the value (don't inverse the value)
-        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.12;
-        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.90;
-        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.15;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.74;
+        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.003;
+        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.858;
+        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.153;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.686;
 
         //To find set the modules to 100% and see what speed caps out at
         public static final double kPhysicalMaxSpeedMetersPerSecond = 4;
@@ -87,9 +87,9 @@ public final class Constants {
         //for balancing command
         public static final double kBoardBalancedGoalDegrees = 0;
         public static final double kBoardBalancedAngleThresholdDegrees = 2;
-        public static final double kBoardBalancedDriveKP = .1;
-        public static final double kBoardBalancedDriveKD = 0;
-        public static final double balanceCounter = 5000;
+        public static final double kBoardBalancedDriveKP = .013;
+        public static final double kBoardBalancedDriveKD = .0011;
+        public static final double balanceCounter = 100;
     }
 
     public static final class AutoConstants {

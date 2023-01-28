@@ -55,15 +55,13 @@ public class SwerveSubsystem extends SubsystemBase {
     private final PigeonIMU gyro = new PigeonIMU(SensorConstants.kPigeonID);
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
             new Rotation2d(0),getModulePositions());
-    private GenericEntry headingShuffleBoard, odometerShuffleBoard, rollShuffleBoard, pitchShuffleBoard, trueAngleShuffleBoard;
+    private GenericEntry headingShuffleBoard, odometerShuffleBoard, trueAngleShuffleBoard;
 
     public SwerveSubsystem() {
         ShuffleboardTab programmerBoard = Shuffleboard.getTab("Programmer Board");
        
         headingShuffleBoard = programmerBoard.add("Robot Heading", 0).getEntry();
         odometerShuffleBoard = programmerBoard.add("Robot Location", "").getEntry();
-        rollShuffleBoard = programmerBoard.add("Robot Roll", 0).getEntry();
-        pitchShuffleBoard = programmerBoard.add("Robot Pitch", 0).getEntry();
         trueAngleShuffleBoard = programmerBoard.add("Robot Angle", 0).getEntry();
 
 
@@ -123,12 +121,8 @@ public class SwerveSubsystem extends SubsystemBase {
         odometer.update(getRotation2d(), getModulePositions());
         headingShuffleBoard.setDouble(getHeading());
         odometerShuffleBoard.setString(getPose().getTranslation().toString());
-        rollShuffleBoard.setDouble(getRoll());
 
-        pitchShuffleBoard.setDouble(getPitch());
         trueAngleShuffleBoard.setDouble(getTrueAngle());
-
-
     }
 
     public SwerveModulePosition[] getModulePositions() {
@@ -153,11 +147,11 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.setDesiredState(desiredStates[3]);
     }
 
-    public void driveDirection(double speed, double heading) {
+    public void driveDirectionForward(double speed) {
         SwerveModuleState[] desiredStates = new SwerveModuleState[4];
 
         for (int i = 0; i < 4; i++) {
-            desiredStates[i] = new SwerveModuleState(speed, Rotation2d.fromDegrees(heading));
+            desiredStates[i] = new SwerveModuleState(speed, Rotation2d.fromDegrees(-getHeading()));
         }
 
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
