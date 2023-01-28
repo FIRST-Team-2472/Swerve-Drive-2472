@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -15,11 +16,11 @@ public final class Constants {
         public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters*(1.0/2048.0);
         public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI*(1.0/2048.0);
         
-        //CTRE mesures their velcity in 100ms, so we multiply it by 10 to get 1s
+        //CTRE measures their velocity in 100ms, so we multiply it by 10 to get 1s
         public static final double kDriveEncoderRPMS2MeterPerSec = kDriveEncoderRot2Meter*10;
         public static final double kTurningEncoderRPMS2RadPerSec = kTurningEncoderRot2Rad*10;
         //use guess and check to find. when the module is overshooting this needs to be fine tuned
-        public static final double kPTurning = 0.2;
+        public static final double kPTurning = .45;
     }
 
     public static final class DriveConstants {
@@ -44,15 +45,15 @@ public final class Constants {
         public static final int kFrontRightTurningMotorPort = 16;
         public static final int kBackRightTurningMotorPort = 14;
 
-        //Positive is clockwise
+        //Positive should be clockwise
         public static final boolean kFrontLeftTurningEncoderReversed = true;
         public static final boolean kBackLeftTurningEncoderReversed = true;
         public static final boolean kFrontRightTurningEncoderReversed = true;
         public static final boolean kBackRightTurningEncoderReversed = true;
 
-        public static final boolean kFrontLeftDriveEncoderReversed = false;
-        public static final boolean kBackLeftDriveEncoderReversed = false;
-        public static final boolean kFrontRightDriveEncoderReversed = false;
+        public static final boolean kFrontLeftDriveEncoderReversed = true;
+        public static final boolean kBackLeftDriveEncoderReversed = true;
+        public static final boolean kFrontRightDriveEncoderReversed = true;
         public static final boolean kBackRightDriveEncoderReversed = true;
 
         public static final int kFrontLeftDriveAbsoluteEncoderPort = 21;
@@ -60,46 +61,71 @@ public final class Constants {
         public static final int kFrontRightDriveAbsoluteEncoderPort = 24;
         public static final int kBackRightDriveAbsoluteEncoderPort = 23;
 
-        //Positive is clockwise
+        //Positive should be clockwise
         public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = true;
         public static final boolean kBackLeftDriveAbsoluteEncoderReversed = true;
         public static final boolean kFrontRightDriveAbsoluteEncoderReversed = true;
         public static final boolean kBackRightDriveAbsoluteEncoderReversed = true;
 
-        //To find set the motors forward record the value
+        //To find set the motors forward record the value (don't inverse the value)
         public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.12;
         public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.90;
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.15;
         public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.74;
 
-        //To find set the modules to 100% and see what speed cap out at
+        //To find set the modules to 100% and see what speed caps out at
         public static final double kPhysicalMaxSpeedMetersPerSecond = 4;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 7 * 2 * Math.PI;
 
         //arbitrary chosen based on what drivers pick
-        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
+        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 2;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
-                kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
+                kPhysicalMaxAngularSpeedRadiansPerSecond / 8;
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
-        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = Math.PI/4;
+        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = Math.PI/3;
+
+        //for balancing command
+        public static final double kBoardBalancedGoalDegrees = 0;
+        public static final double kBoardBalancedAngleThresholdDegrees = 2;
+        public static final double kBoardBalancedDriveKP = .1;
+        public static final double kBoardBalancedDriveKD = 0;
+        public static final double balanceCounter = 5000;
+    }
+
+    public static final class AutoConstants {
+        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 2;
+        public static final double kMaxAngularSpeedRadiansPerSecond = //
+                DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 6;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+        public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 3;
+        public static final double kPXController = 1.5;
+        public static final double kPYController = 1.5;
+        public static final double kPThetaController = 2;
+
+        public static final TrapezoidProfile.Constraints kThetaControllerConstraints = //
+                new TrapezoidProfile.Constraints(
+                        kMaxAngularSpeedRadiansPerSecond,
+                        kMaxAngularAccelerationRadiansPerSecondSquared);
     }
 
     public static final class OIConstants {
         //joystick id
         public static final int kDriverControllerPort = 0;
+        public static final int kSecondaryDriverControllerPort = 1;
 
         //axis and buttons id for drive joysticks
         public static final int kDriverYAxis = 1;
         public static final int kDriverXAxis = 0;
-        public static final int kDriverRotAxis = 2;
+
+        //buttons for secodary joystick
+        public static final int kDriverRotAxis = 0;
         public static final int kDriverFieldOrientedButtonIdx = 1;
 
         //area were joysticks will not activate
-        public static final double kDeadband = 0.05;
+        public static final double kDeadband = 0.1;
     }
 
     public static final class SensorConstants {
-        //make a bettter id. 0 is bad
         public static final int kPigeonID = 20;
     }
 }
