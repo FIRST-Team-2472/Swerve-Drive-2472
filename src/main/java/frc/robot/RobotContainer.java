@@ -17,7 +17,6 @@ public class RobotContainer {
 
     private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
     private final Joystick secodaryDriverJoystick = new Joystick(OIConstants.kSecondaryDriverControllerPort);
-        private int inverse = 1;
 
     public RobotContainer() {
         //sets up the defalt command for the swerve subsystem. Defalut commands run if no other commands are set
@@ -27,7 +26,7 @@ public class RobotContainer {
                 swerveSubsystem,
                 () -> -driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
                 () -> driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
-                () -> secodaryDriverJoystick.getRawAxis(OIConstants.kDriverRotAxis)*inverse,
+                () -> secodaryDriverJoystick.getRawAxis(OIConstants.kDriverRotAxis),
                 () -> !secodaryDriverJoystick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
 
         configureButtonBindings();
@@ -44,6 +43,6 @@ public class RobotContainer {
 
     //generates a path via points
     public Command getAutonomousCommand() {
-        return commandSequences.testAuto1(swerveSubsystem);
+        return commandSequences.auto5(swerveSubsystem);
     }
 }

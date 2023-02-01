@@ -10,11 +10,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.*;
@@ -25,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class CommandSequences {
     
     //generates a path via points
-    private Command genratePath(SwerveSubsystem swerveSubsystem, List<Translation2d> midPoints, Pose2d endPoint) {
+    private Command genratePath(SwerveSubsystem swerveSubsystem, Pose2d startPoint, List<Translation2d> midPoints, Pose2d endPoint) {
         // 1. Create trajectory settings
         TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
                 AutoConstants.kMaxSpeedMetersPerSecond,
@@ -35,7 +33,7 @@ public class CommandSequences {
         // 2. Generate trajectory
         //Genrates trajectory need to feed start point, a sereris of inbtween points, and end point
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-                swerveSubsystem.getPose(),
+                startPoint,
                 midPoints,
                 endPoint,
                 trajectoryConfig);
@@ -67,33 +65,61 @@ public class CommandSequences {
                 new InstantCommand(() -> swerveSubsystem.stopModules()));
     }
 
+    public Command auto1( SwerveSubsystem swerveSubsystem) {
+        swerveSubsystem.resetOdometry(simplePose(1.87, .53, 0));
+        swerveSubsystem.zeroHeading();
 
-
-    public Command autonomousExample( SwerveSubsystem swerveSubsystem) {
-        return new SequentialCommandGroup(genratePath(swerveSubsystem, List.of(), new Pose2d(Units.inchesToMeters(-200),Units.inchesToMeters(16),Rotation2d.fromDegrees(180))),
-        genratePath(swerveSubsystem, List.of(), new Pose2d(Units.inchesToMeters(-20),Units.inchesToMeters(0), new Rotation2d(0))),
-        genratePath(swerveSubsystem, List.of(), new Pose2d(Units.inchesToMeters(76.19),Units.inchesToMeters(38.2), new Rotation2d(0))),
-        genratePath(swerveSubsystem, List.of(), new Pose2d(Units.inchesToMeters(36.06),Units.inchesToMeters(0), new Rotation2d(0))));
-    }
-
-    public Command testAuto1( SwerveSubsystem swerveSubsystem) {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(new Translation2d(1.87, .53), Rotation2d.fromDegrees(0)))),
-                new InstantCommand(() -> swerveSubsystem.zeroHeading()),
-                new WaitCommand(.1),
-                genratePath(swerveSubsystem, List.of(new Translation2d(2.85,0.92)), new Pose2d(7.09,0.92, Rotation2d.fromDegrees(180))));
-                //genratePath(swerveSubsystem, List.of(new Translation2d(5.57,2.24)), new Pose2d(3.91,2.24, new Rotation2d(0))));
+                genratePath(swerveSubsystem, simplePose(1.87, .53, 0), List.of(simple2D(2.85, 0.92)), simplePose(7.09, 0.92, 180)),
+                genratePath(swerveSubsystem, simplePose(5.09, 0.92, 180), List.of(simple2D(5.57, 2.24)), simplePose(3.91,2.24, 0))
+        );
     }
 
-    public Command testAuto2( SwerveSubsystem swerveSubsystem) {
+    public Command auto2(SwerveSubsystem swerveSubsystem) {
+        swerveSubsystem.resetOdometry(simplePose(1.87, .53, 0));
+        swerveSubsystem.zeroHeading();
+
         return new SequentialCommandGroup(
-        genratePath(swerveSubsystem, List.of(), new Pose2d(2.87,0.53,Rotation2d.fromDegrees(0))),
-        genratePath(swerveSubsystem, List.of(), new Pose2d(2.85,0.92, new Rotation2d(180))),
-        genratePath(swerveSubsystem, List.of(), new Pose2d(7.09,0.92, new Rotation2d(180))),
-        genratePath(swerveSubsystem, List.of(), new Pose2d(5.57,2.24, new Rotation2d(180))),
-        genratePath(swerveSubsystem, List.of(), new Pose2d(3.91,2.24, new Rotation2d(180))),
-        genratePath(swerveSubsystem, List.of(), new Pose2d(3.91,2.24, new Rotation2d(0))));
+                genratePath(swerveSubsystem, simplePose(1.87, .53, 0), List.of(), simplePose(7.09, .92, 180)),
+                genratePath(swerveSubsystem, simplePose(7.09, .92, 180), List.of(simple2D(2.46, .89)), simplePose(1.86, 1.62, 0))
+        );
     }
 
- 
+    public Command auto3(SwerveSubsystem swerveSubsystem) {
+        swerveSubsystem.resetOdometry(simplePose(1.88, 4.97, 0));
+        swerveSubsystem.zeroHeading();
+
+        return new SequentialCommandGroup(
+                genratePath(swerveSubsystem, simplePose(1.88, 4.97, 0), List.of(), simplePose(7.09, 4.60, 180)),
+                genratePath(swerveSubsystem, simplePose(7.09, 4.60, 180), List.of(simple2D(5.45, 3.27)), simplePose(3.90, 3.27, 0))
+        );
+    }
+
+    public Command auto4(SwerveSubsystem swerveSubsystem) {
+        swerveSubsystem.resetOdometry(simplePose(1.86, 4.97, 0));
+        swerveSubsystem.zeroHeading();
+
+        return new SequentialCommandGroup(
+                genratePath(swerveSubsystem, simplePose(1.86, 4.97, 0), List.of(), simplePose(7.09, 4.60, 180)),
+                genratePath(swerveSubsystem, simplePose(7.09, 4.60, 180), List.of(simple2D(2.43, 4.47)), simplePose(1.86, 3.86, 0))
+        );
+    }
+
+    public Command auto5(SwerveSubsystem swerveSubsystem) {
+        swerveSubsystem.resetOdometry(simplePose(1.86, 2.19, 0));
+        swerveSubsystem.zeroHeading();
+
+        return new SequentialCommandGroup(
+                genratePath(swerveSubsystem, simplePose(1.86, 2.19, 0), List.of(simple2D(2.46, 2.14), simple2D(5.49, 2.14)), simplePose(7.09, 2.14, 180)),
+                genratePath(swerveSubsystem, simplePose(7.09, 2.14, 180), List.of(simple2D(5.49, 2.14)), simplePose(3.91, 2.14, 180))
+        );
+    }
+
+    public Pose2d simplePose(double x, double y, double angleDegrees) {
+        return new Pose2d(x, -y, Rotation2d.fromDegrees(angleDegrees));
+    }
+
+    public Translation2d simple2D(double x, double y) {
+        return new Translation2d(x, -y);
+    }
 }
