@@ -30,7 +30,6 @@ public class BalanceOnBoardCmd extends CommandBase {
   @Override
   public void execute() {
     driveSpeed = DriveConstants.kPhysicalMaxSpeedMetersPerSecond*pidController.calculate(-swerveSubsystem.getTrueAngle(), DriveConstants.kBoardBalancedGoalDegrees);
-    System.out.println("Speed: "+ driveSpeed);
 
     swerveSubsystem.driveDirectionForward(driveSpeed);
   }
@@ -39,7 +38,6 @@ public class BalanceOnBoardCmd extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     swerveSubsystem.stopModules();
-    System.out.println("done");
   }
 
   // Returns true when the command should end.

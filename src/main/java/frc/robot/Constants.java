@@ -93,11 +93,11 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 2;
+        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 1.5;
         public static final double kMaxAngularSpeedRadiansPerSecond = //
                 DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 3;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-        public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 3;
+        public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 2;
         public static final double kPXController = 1.5;
         public static final double kPYController = 1.5;
         public static final double kPThetaController = 2;
@@ -106,6 +106,11 @@ public final class Constants {
                 new TrapezoidProfile.Constraints(
                         kMaxAngularSpeedRadiansPerSecond,
                         kMaxAngularAccelerationRadiansPerSecondSquared);
+
+        public static final double kTargetPositionPXController = 4;
+        public static final double kTargetPositionPYController = 4;
+        public static final double kTargetPositionPThetaController = 3.5;
+        public static final double kTargetPositonAcceptableError = 0.05;
     }
 
     public static final class OIConstants {
