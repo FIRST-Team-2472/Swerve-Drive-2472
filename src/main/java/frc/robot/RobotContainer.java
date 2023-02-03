@@ -42,9 +42,6 @@ public class RobotContainer {
 
     //generates a path via points
     public Command getAutonomousCommand() {
-        swerveSubsystem.resetOdometry(new Pose2d());
-        swerveSubsystem.zeroHeading();
-
-        return new SwerveDriveToPointCmd(swerveSubsystem, new Pose2d(1, 1, Rotation2d.fromDegrees(0)));
+        return commandSequences.auto5(swerveSubsystem);
     }
 }
