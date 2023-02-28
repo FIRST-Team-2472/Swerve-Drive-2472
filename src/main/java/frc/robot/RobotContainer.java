@@ -35,7 +35,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {        
         //reseting button for IMU. Usefull for change field orentation forward direction
-        new JoystickButton(secodaryDriverJoystick, 3).onTrue(new SwerveDriveToPointCmd(swerveSubsystem, new Pose2d(1, 1, Rotation2d.fromDegrees(0))));
+        new JoystickButton(secodaryDriverJoystick, 3).whileTrue(new SwerveDriveToPointCmd(swerveSubsystem, new Pose2d(1, 1, Rotation2d.fromDegrees(0))));
         new JoystickButton(driverJoytick, 2).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
         new JoystickButton(driverJoytick, 3).onTrue(new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d())));
     }
