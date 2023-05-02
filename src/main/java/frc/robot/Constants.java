@@ -100,41 +100,6 @@ public final class Constants {
                 kPhysicalMaxAngularSpeedRadiansPerSecond / 16;
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 8;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = Math.PI * 2;
-
-        // for balancing command
-        public static final double kBoardBalancedGoalDegrees = 0;
-        public static final double kBoardBalancedAngleThresholdDegrees = 2;
-        public static final double kBoardBalancedDriveKP = .035;
-    }
-
-    public static final class ArmConstants {
-        public static final double kArmHighAngle = 115;
-        public static final double kArmMidAngle = 96.5; //94.5 -> 88
-        public static final double kArmLowAngle = 35;
-        public static final double kArmPickUpFromFloorAngle = 25;
-        public static final double kArmPickUpFromPortAngle = 93.5;
-
-        // rotating the arm is a big NEO
-        public static final int kRotater = 40;
-        public static final double kRotaterKP = 0.5;
-        public static final double kRotaterKI = 0.0;
-
-        public static final boolean kRotaterEncoderReversed = false;
-        public static final double kRotaterEncoderCountstoAngle = 3.6;
-        public static final double kConeMinSpeed = (1.06 * 9.81 * .653) / ( 100*2.6);
-        public static final double kMinSpeedUpperBound100Percent = .12; //.065
-        public static final double kMinSpeedLowerBound100Percent = .005;
-        public static final double kHoldSpeed100Percent  = .065;
-
-        public static final double kMaxSpeedPercent = 0.7;
-        public static final double kForwardAccelerationLimitPercent = 2;
-        public static final double kBackwardAccelerationLimitPercent = -8;
-
-        public static final int kArmPneumaticFwd = 4;
-        public static final int kArmPneumaticBwrd = 2;
-
-        public static final int kGrabberFwd = 3;
-        public static final int kGrabberBwrd = 1;
     }
 
     public static final class AutoConstants {
@@ -178,18 +143,8 @@ public final class Constants {
         public static final int kLeftDriverYAxis = 1;
         public static final int kLeftDriverXAxis = 0;
 
-        public static final int kLeftDriverIntakeForwardButtonIdx = 1;
-        public static final int kLeftDriverReverseIntakeButtonIdx = 3;
-        public static final int kLeftDriverLimelightCenteringButtonIdx = 2;
-        public static final int kLeftDriverMoveToNearestConeGoalButtonIdx = 4;
-        public static final int kLeftDriverMoveToNearestCubeGoalButtonIdx = 5;
-
         // right joystick
         public static final int kRightDriverRotAxis = 0;
-
-        public static final int kLeftDriverSlowButtonIdx = 1;
-        public static final int kRightResetHeadingButtonIdx = 4;
-        public static final int kRightDriverBalanceOnBoardButtonIdx = 3;
 
         // area were joysticks will not activate
         public static final double kDeadband = 0.15;

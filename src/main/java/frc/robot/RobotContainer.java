@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -54,22 +53,17 @@ public class RobotContainer {
         () -> -leftJoystick.getRawAxis(OIConstants.kLeftDriverYAxis),
         () -> leftJoystick.getRawAxis(OIConstants.kLeftDriverXAxis),
         () -> rightJoystick.getRawAxis(OIConstants.kRightDriverRotAxis),
-        () -> leftJoystick.getRawButton(OIConstants.kLeftDriverSlowButtonIdx),
-        () -> xboxController.getRightTriggerAxis(),
-        () -> xboxController.getLeftTriggerAxis(),
-        () -> xboxController.getPOV()));
+        () -> leftJoystick.getRawButton(1)));
   }
 
   private void configureButtonBindings() {
+    new JoystickButton(rightJoystick, 2).onTrue(new SwerveDriveToPointCmd(swerveSubsystem, new Pose2d()));
+    new JoystickButton(rightJoystick, 3).onTrue(new OverideCmd(swerveSubsystem));
     // reseting button for IMU. Usefull for change field orentation forward direction
     new JoystickButton(rightJoystick, 4)
         .onTrue(new InstantCommand(swerveSubsystem::zeroHeading));
-    // new JoystickButton(rightJoystick, 2).whileTrue(new BalanceOnBoardCmd(swerveSubsystem));
-    new JoystickButton(rightJoystick, 5).onTrue(new InstantCommand(() ->
-     swerveSubsystem.resetOdometryFromPositivePos(new Pose2d())));
-    new JoystickButton(rightJoystick, 2).onTrue(new SwerveDriveToPointCmd(swerveSubsystem, new Pose2d()));
-
-    new JoystickButton(leftJoystick, 2).onTrue(new OverideCmd(swerveSubsystem));
+    new JoystickButton(rightJoystick, 5)
+        .onTrue(new InstantCommand(() -> swerveSubsystem.resetOdometryFromPositivePos(new Pose2d())));
   }
 
   public Command getAutonomousCommand() {
