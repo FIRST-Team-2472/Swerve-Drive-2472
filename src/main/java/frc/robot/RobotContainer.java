@@ -1,47 +1,84 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot;
 
+
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.Constants.OIConstants;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.OIConstants;
-import frc.robot.commands.SwerveDriveToPointCmd;
-import frc.robot.commands.SwerveJoystickCmd;
-import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
-        
-    private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-        private final CommandSequences commandSequences = new CommandSequences();
+  private final String defaultAuto = "Default Auto";
 
-    private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
-    private final Joystick secodaryDriverJoystick = new Joystick(OIConstants.kSecondaryDriverControllerPort);
+  private String m_autoSelected;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-    public RobotContainer() {
-        //sets up the defalt command for the swerve subsystem. Defalut commands run if no other commands are set
-        //the () -> are lambda expressions.
-        //lambda is sending over a method
-        swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
-                swerveSubsystem,
-                () -> -driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
-                () -> driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
-                () -> secodaryDriverJoystick.getRawAxis(OIConstants.kDriverRotAxis),
-                () -> !secodaryDriverJoystick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+  // Subsystems
+  private final CommandSequences commandSequences = new CommandSequences();
+  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
-        configureButtonBindings();
-    }
+  private final Joystick leftJoystick = new Joystick(OIConstants.kLeftJoystickPort);
+  private final Joystick rightJoystick = new Joystick(OIConstants.kRightJoystickPort);
+  private final XboxController xboxController = new XboxController(OIConstants.kXboxControllerPort);
 
-    private void configureButtonBindings() {        
-        //reseting button for IMU. Usefull for change field orentation forward direction
-        new JoystickButton(secodaryDriverJoystick, 3).whileTrue(new SwerveDriveToPointCmd(swerveSubsystem, new Pose2d(1, 1, Rotation2d.fromDegrees(0))));
-        new JoystickButton(driverJoytick, 2).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
-        new JoystickButton(driverJoytick, 3).onTrue(new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d())));
-    }
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
+  public RobotContainer() {
+    configureButtonBindings();
 
-    //generates a path via points
-    public Command getAutonomousCommand() {
-        return commandSequences.autoBlue5(swerveSubsystem);
-    }
+    m_chooser.addOption(defaultAuto, defaultAuto);
+
+    ShuffleboardTab driverBoard = Shuffleboard.getTab("Driver Board");
+
+    driverBoard.add("Auto choices", m_chooser).withWidget(BuiltInWidgets.kComboBoxChooser);
+
+    // sets up the defalt command for the swerve subsystem. Defalut commands run if
+    // no other commands are set
+    // the () -> are lambda expressions.
+    // lambda is sending over a method
+    swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(swerveSubsystem,
+        () -> -leftJoystick.getRawAxis(OIConstants.kLeftDriverYAxis),
+        () -> leftJoystick.getRawAxis(OIConstants.kLeftDriverXAxis),
+        () -> rightJoystick.getRawAxis(OIConstants.kRightDriverRotAxis),
+        () -> leftJoystick.getRawButton(OIConstants.kLeftDriverSlowButtonIdx),
+        () -> xboxController.getRightTriggerAxis(),
+        () -> xboxController.getLeftTriggerAxis(),
+        () -> xboxController.getPOV()));
+  }
+
+  private void configureButtonBindings() {
+    // reseting button for IMU. Usefull for change field orentation forward direction
+    new JoystickButton(rightJoystick, 4)
+        .onTrue(new InstantCommand(swerveSubsystem::zeroHeading));
+    // new JoystickButton(rightJoystick, 2).whileTrue(new BalanceOnBoardCmd(swerveSubsystem));
+    new JoystickButton(rightJoystick, 5).onTrue(new InstantCommand(() ->
+     swerveSubsystem.resetOdometryFromPositivePos(new Pose2d())));
+    new JoystickButton(rightJoystick, 2).onTrue(new SwerveDriveToPointCmd(swerveSubsystem, new Pose2d()));
+
+    new JoystickButton(leftJoystick, 2).onTrue(new OverideCmd(swerveSubsystem));
+  }
+
+  public Command getAutonomousCommand() {
+    swerveSubsystem.zeroHeading();
+    m_autoSelected = m_chooser.getSelected();
+
+    if (m_autoSelected == defaultAuto)
+      return commandSequences.defualtAuto(swerveSubsystem);
+
+    return null;
+  }
 }

@@ -1,32 +1,35 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class SwerveDriveToPointCmd extends CommandBase {
+public class SwerveRotateToAngle extends CommandBase {
   private SwerveSubsystem swerveSubsystem;
-  private Pose2d targetPosition;
-  private Timer timer;
+  private Rotation2d targetAngle;
+  private Timer timer, overide;
 
-  public SwerveDriveToPointCmd(SwerveSubsystem m_SwerveSubsystem, Pose2d targetPosition) {
+  public SwerveRotateToAngle(SwerveSubsystem m_SwerveSubsystem, Rotation2d targetAngle) {
     this.swerveSubsystem = m_SwerveSubsystem;
-    this.targetPosition = targetPosition;
+    this.targetAngle = targetAngle;
     
     timer = new Timer();
+    overide = new Timer();
 
     addRequirements(m_SwerveSubsystem);
   }
 
   @Override
   public void initialize() {
+    swerveSubsystem.initializeRotateToAngle();
     timer.restart();
+    overide.restart();
   }
 
   @Override
   public void execute() {
-    swerveSubsystem.excuteDriveToPointAndRotate(targetPosition);
+    swerveSubsystem.excuteRotateToAngle(targetAngle);
   }
 
   @Override
@@ -36,9 +39,12 @@ public class SwerveDriveToPointCmd extends CommandBase {
 
   @Override
   public boolean isFinished() {
+    if (overide.hasElapsed(3))
+      return true;
+    
     // use this function if you overide the command to finsih it
-    if ( swerveSubsystem.isAtPoint(targetPosition.getTranslation()) && swerveSubsystem.isAtAngle(targetPosition.getRotation()))
-      return timer.hasElapsed(.05);
+    if ( swerveSubsystem.isAtAngle(targetAngle))
+      return timer.hasElapsed(.2);
     timer.restart();
     return false;
   }
