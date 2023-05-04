@@ -16,33 +16,35 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.swerveExtras.PosPose2d;
+import frc.robot.subsystems.swerveExtras.PositivePoint;
 import frc.robot.commands.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class CommandSequences {
-    Pose2d[] exampleNodes = new Pose2d[1];
+    PosPose2d[] exampleNodes = new PosPose2d[1];
 
     public CommandSequences() {
         exampleNodes[0] = simplePose(1, 0, 180);
     }
 
   
-    public Command driveToPointAndRotate(SwerveSubsystem swerveSubsystem, Pose2d pose) {
-        Pose2d drivePos = new Pose2d(swerveSubsystem.positivePosToDrivePos(pose.getTranslation()), pose.getRotation());
+    public Command driveToPointAndRotate(SwerveSubsystem swerveSubsystem, PosPose2d pose) {
+        Pose2d drivePos = new Pose2d(pose.getPositivePoint().toDrivePos(swerveSubsystem.isOnRed()), pose.getRotation());
         return new SwerveDriveToPointCmd(swerveSubsystem, drivePos);
     }
 
     public Command defualtAuto(SwerveSubsystem swerveSubsystem) {
-        swerveSubsystem.resetOdometryFromPositivePos(new Pose2d());
+        swerveSubsystem.resetOdometryFromPositivePos(new PositivePoint(), new Rotation2d());
 
         return new SequentialCommandGroup(
-            genratePath(swerveSubsystem, new Pose2d(), List.of(),  exampleNodes[0])
+            genratePath(swerveSubsystem, new PosPose2d(), List.of(),  exampleNodes[0])
         );
     }
 
     // generates a path via points
-    private Command genratePath(SwerveSubsystem swerveSubsystem, Pose2d startPoint, List<Translation2d> midPoints,
-            Pose2d endPoint) {
+    private Command genratePath(SwerveSubsystem swerveSubsystem, PosPose2d startPoint, List<PositivePoint> midPoints,
+        PosPose2d endPoint) {
         // 1. Create trajectory settings
         TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
                 AutoConstants.kMaxSpeedMetersPerSecond,
@@ -89,8 +91,8 @@ public class CommandSequences {
                 new InstantCommand(() -> swerveSubsystem.stopModules()));
     }
 
-    public Pose2d simplePose(double x, double y, double angleDegrees) {
-        return new Pose2d(x, y, Rotation2d.fromDegrees(angleDegrees));
+    public PosPose2d simplePose(double x, double y, double angleDegrees) {
+        return new PosPose2d(x, y, Rotation2d.fromDegrees(angleDegrees));
     }
 
 }

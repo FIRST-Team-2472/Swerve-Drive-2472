@@ -24,6 +24,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SensorConstants;
+import frc.robot.subsystems.swerveExtras.AccelerationLimiter;
+import frc.robot.subsystems.swerveExtras.DrivePoint;
+import frc.robot.subsystems.swerveExtras.DrivePose2d;
+import frc.robot.subsystems.swerveExtras.FieldPoint;
+import frc.robot.subsystems.swerveExtras.FieldPose2d;
+import frc.robot.subsystems.swerveExtras.PosPose2d;
+import frc.robot.subsystems.swerveExtras.PositivePoint;
 
 public class SwerveSubsystem extends SubsystemBase {
     // All of the constants.
@@ -213,18 +220,21 @@ public class SwerveSubsystem extends SubsystemBase {
         return odometer.getPoseMeters();
     }
 
-    public void resetOdometryFromFieldPos(Pose2d fieldPos) {
-        Pose2d tempPos = new Pose2d(positivePosToDrivePos(fieldPos.getTranslation()), fieldPos.getRotation());
-        resetOdometryFromPositivePos(tempPos);
+    public DrivePoint getDrivePoint() {
+        return new DrivePoint(odometer.getPoseMeters().getTranslation());
     }
 
-    public void resetOdometryFromPositivePos(Pose2d positivePos) {
+    public void resetOdometryFromFieldPos(FieldPose2d fieldPos) {
+        resetOdometryFromPositivePos(fieldPos.toPosPose2d(isOnRed()));
+    }
+
+    public void resetOdometryFromPositivePos(PosPose2d posPose) {
         // heading must be zeroed correctly before running this method
         // Resets the odometry based on new information.
         // offset is used if the robot starts in a direction that isn't the forward
         // direction
 
-        Pose2d tempPos = new Pose2d(positivePosToDrivePos(positivePos.getTranslation()), positivePos.getRotation());
+        DrivePose2d tempPos = posPose.toDrivePose2d(isOnRed());
         odometer.resetPosition(getRotation2d(), getModulePositions(), tempPos);
     }
 
@@ -357,7 +367,7 @@ public class SwerveSubsystem extends SubsystemBase {
         // No idea how Sawyer figured this out, but he did.
 
         // Covernts odometry pos (a drive pos) into a positive pos for comparison
-        Translation2d robotPose = drivePosToPositivePos(getPose().getTranslation());
+        PositivePoint robotPose = getDrivePoint().toPositivePos(isOnRed());
         Translation2d nodePose = comparisonArray[0].getTranslation();
         //Sets an initial value to a value in the array, so the intial value isn't smaller than all of the values in the array 
         double smallestConeDistance = robotPose.getDistance(nodePose);
@@ -420,7 +430,7 @@ public class SwerveSubsystem extends SubsystemBase {
     // positive/blue position -> simplfyed position for comparisions to auto points
     // field position -> the actual postion of the robot on the field. photon vision
     // returns this
-    public Translation2d fieldPosToDrivePos(Translation2d fieldPos) {
+   /*  public Translation2d fieldPosToDrivePos(Translation2d fieldPos) {
         if (isOnRed()) {
             return new Translation2d(SensorConstants.sizeOfFieldMeters - fieldPos.getX(), fieldPos.getY());
         }
@@ -434,7 +444,7 @@ public class SwerveSubsystem extends SubsystemBase {
         return fieldPos;
     }
 
-    public Translation2d positivePosToRealPos(Translation2d positivePose) {
+    public Translation2d positivePosToFieldPos(Translation2d positivePose) {
         if (isOnRed()) {
             return new Translation2d(SensorConstants.sizeOfFieldMeters - positivePose.getX(), positivePose.getY());
         }
@@ -448,7 +458,7 @@ public class SwerveSubsystem extends SubsystemBase {
         return new Translation2d(positivePose.getX(), -Math.abs(positivePose.getY()));
     }
 
-    public Translation2d drivePosToRealPos(Translation2d drivePos) {
+    public Translation2d drivePosToFieldPos(Translation2d drivePos) {
         if (isOnRed()) {
             return new Translation2d(SensorConstants.sizeOfFieldMeters - drivePos.getX(), drivePos.getY());
         }
@@ -460,5 +470,5 @@ public class SwerveSubsystem extends SubsystemBase {
             return drivePos;
         }
         return new Translation2d(drivePos.getX(), Math.abs(drivePos.getY()));
-    }
+    }*/
 }
