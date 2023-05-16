@@ -4,15 +4,26 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.swerveExtras.DrivePose2d;
+import frc.robot.subsystems.swerveExtras.PosPose2d;
 
 public class SwerveDriveToPointCmd extends CommandBase {
   private SwerveSubsystem swerveSubsystem;
   private Pose2d targetPosition;
   private Timer timer;
 
-  public SwerveDriveToPointCmd(SwerveSubsystem m_SwerveSubsystem, Pose2d targetPosition) {
+  public SwerveDriveToPointCmd(SwerveSubsystem m_SwerveSubsystem, DrivePose2d targetPosition) {
     this.swerveSubsystem = m_SwerveSubsystem;
     this.targetPosition = targetPosition;
+    
+    timer = new Timer();
+
+    addRequirements(m_SwerveSubsystem);
+  }
+
+  public SwerveDriveToPointCmd(SwerveSubsystem m_SwerveSubsystem, PosPose2d targetPosition) {
+    this.swerveSubsystem = m_SwerveSubsystem;
+    this.targetPosition = targetPosition.toDrivePose2d(swerveSubsystem.isOnRed());
     
     timer = new Timer();
 

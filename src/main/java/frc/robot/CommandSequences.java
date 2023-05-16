@@ -28,13 +28,7 @@ public class CommandSequences {
     public CommandSequences() {
         exampleNodes[0] = simplePose(1, 0, 180);
     }
-
-  
-    public Command driveToPointAndRotate(SwerveSubsystem swerveSubsystem, PosPose2d pose) {
-        Pose2d drivePos = new Pose2d(pose.getPositivePoint().toDrivePos(swerveSubsystem.isOnRed()), pose.getRotation());
-        return new SwerveDriveToPointCmd(swerveSubsystem, drivePos);
-    }
-
+    
     public Command defualtAuto(SwerveSubsystem swerveSubsystem) {
         swerveSubsystem.resetOdometryFromPositivePos(new PosPose2d());
 
