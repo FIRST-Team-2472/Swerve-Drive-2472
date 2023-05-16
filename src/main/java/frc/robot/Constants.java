@@ -1,9 +1,6 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -42,10 +39,10 @@ public final class Constants {
 
     public static final class DriveConstants {
 
-        public static final double kTrackWidth = Units.inchesToMeters(19.75);
         // Distance between right and left wheels
-        public static final double kWheelBase = Units.inchesToMeters(23.75);
+        public static final double kTrackWidth = Units.inchesToMeters(19.75);
         // Distance between front and back wheels
+        public static final double kWheelBase = Units.inchesToMeters(23.75);
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
                 new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
                 new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -90,19 +87,25 @@ public final class Constants {
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 2.74 - (Math.PI / 2); // 0.15
         public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 1.90 - (Math.PI / 2); // 2.74
 
+        // Max physical speed of our motors. Required for motor speed caculations 
         // To find set the modules to 100% and see what speed cap out at
         public static final double kPhysicalMaxSpeedMetersPerSecond = 4;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 7 * 2 * Math.PI;
 
-        // arbitrary chosen based on what drivers pick
+        // Motion constants for joystick drive mode -> dependant on max speed
+        // Max x/y speed of robot in this drive mode
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
+        // Max rotation speed of robot in this drive mode
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
                 kPhysicalMaxAngularSpeedRadiansPerSecond / 16;
+        // Max x/y acceleration of robot in this drive mode
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 8;
+        // Max rotational acceleration of robot in this drive mode
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = Math.PI * 2;
     }
 
     public static final class AutoConstants {
+        // Motion constants for sequential path drive mode
         public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 4;
         public static final double kMaxAngularSpeedRadiansPerSecond = //
                 DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 14;
@@ -117,6 +120,7 @@ public final class Constants {
                         kMaxAngularSpeedRadiansPerSecond,
                         kMaxAngularAccelerationRadiansPerSecondSquared);
 
+        // Motion constants for target position drive mode
         public static final double kTargetPosMaxSpeed = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 4;
         public static final double kTargetPosMaxAngularSpeed = //
                 DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 16;
@@ -124,7 +128,7 @@ public final class Constants {
         public static final double kTargetPosBackwardMaxAcceleration = -12;
         public static final double kTargetPosMaxAngularAcceleration = Math.PI / 3;
         public static final double kTargetPosBackwardAngularAcceleration = -Math.PI * 9;
-        public static final double kMinAngluarSpeedRadians = Math.PI / 16 ;
+        public static final double kMinAngluarSpeedRadians = Math.PI / 16;
         public static final double kMinSpeedMetersPerSec = .2;
 
         public static final double kTargetPosPDriveController = 1.9;
@@ -151,32 +155,11 @@ public final class Constants {
     }
 
     public static final class SensorConstants {
-        // Limelight pipelines
         public static final int kCompressorPort = 1;
-
-        public static final int kPIPELINE_DRIVER_MODE = 0;
-        public static final int kPIPELINE_TARGETING_MODE = 1;
 
         public static final int kPigeonID = 20;
 
-        // Photonvision pipelines
         public static final double sizeOfFieldMeters = 16.53;
-
-        private static final double camAngle = Units.degreesToRadians(8);
-        private static final double camHeight = Units.inchesToMeters(11.5);
-        private static final double camXfromCenterOfRobot = Units.inchesToMeters(11.0) - 0.03;
-        private static final double camYfromCenterOfRobot = Units.inchesToMeters(11.25) + 0.03;
-        public static final String cameraLeft = "BackRightCam";
-        public static final String cameraRight = "FrontCam";
-
-        //Keep close tabs on the orientation of the Pigeon, this affects these measurements
-        //Also make sure you use the Rotation3d correctly
-        public static final Transform3d camLeftPosition = new Transform3d(
-                new Translation3d(-camXfromCenterOfRobot, -camYfromCenterOfRobot, camHeight),
-                new Rotation3d(camAngle, 0, Math.PI));
-        public static final Transform3d camRightPosition = new Transform3d(
-                new Translation3d(-camYfromCenterOfRobot, camYfromCenterOfRobot, camHeight),
-                new Rotation3d(camAngle, 0, Math.PI));
     }
 
 }

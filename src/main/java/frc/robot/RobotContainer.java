@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.swerveExtras.PosPose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -63,7 +64,7 @@ public class RobotContainer {
     new JoystickButton(rightJoystick, 4)
         .onTrue(new InstantCommand(swerveSubsystem::zeroHeading));
     new JoystickButton(rightJoystick, 5)
-        .onTrue(new InstantCommand(() -> swerveSubsystem.resetOdometryFromPositivePos(new Pose2d())));
+        .onTrue(new InstantCommand(() -> swerveSubsystem.resetOdometryFromPositivePos(new PosPose2d())));
   }
 
   public Command getAutonomousCommand() {

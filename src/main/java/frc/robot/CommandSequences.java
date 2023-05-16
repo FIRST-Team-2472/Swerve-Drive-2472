@@ -1,5 +1,6 @@
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -35,7 +36,7 @@ public class CommandSequences {
     }
 
     public Command defualtAuto(SwerveSubsystem swerveSubsystem) {
-        swerveSubsystem.resetOdometryFromPositivePos(new PositivePoint(), new Rotation2d());
+        swerveSubsystem.resetOdometryFromPositivePos(new PosPose2d());
 
         return new SequentialCommandGroup(
             genratePath(swerveSubsystem, new PosPose2d(), List.of(),  exampleNodes[0])
@@ -51,18 +52,20 @@ public class CommandSequences {
                 AutoConstants.kMaxAccelerationMetersPerSecondSquared)
                 .setKinematics(DriveConstants.kDriveKinematics);
 
-        startPoint = new Pose2d(swerveSubsystem.positivePosToDrivePos(startPoint.getTranslation()), startPoint.getRotation());
-        endPoint = new Pose2d(swerveSubsystem.positivePosToDrivePos(endPoint.getTranslation()), endPoint.getRotation());
-        midPoints.forEach(i -> i = swerveSubsystem.positivePosToDrivePos(i));
+        Pose2d driveStartPoint = startPoint.toDrivePose2d(swerveSubsystem.isOnRed());
+        Pose2d driveEndPoint = endPoint.toDrivePose2d(swerveSubsystem.isOnRed());
+        List<Translation2d> driveMidPoints = new ArrayList<Translation2d>();
+        for (int i = 0; i < midPoints.size(); i++)
+            driveMidPoints.add(midPoints.get(i).toDrivePos(swerveSubsystem.isOnRed()));
 
         // 2. Generate trajectory
         // Genrates trajectory need to feed start point, a series of inbetween points,
         // and end point
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-                startPoint,
-                midPoints,
-                endPoint,
-                trajectoryConfig);
+            driveStartPoint,
+            driveMidPoints,
+            driveEndPoint,
+            trajectoryConfig);
 
         // 3. Define PID controllers for tracking trajectory
         PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
