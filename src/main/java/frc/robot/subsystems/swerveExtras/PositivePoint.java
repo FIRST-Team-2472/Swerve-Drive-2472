@@ -2,8 +2,10 @@ package frc.robot.subsystems.swerveExtras;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants.SensorConstants;
+import frc.robot.subsystems.SwerveSubsystem;
 
 public class PositivePoint extends Translation2d {
+    // positive/blue position -> simplfyed position for comparisions to auto points
 
     public PositivePoint() {
         super();
@@ -18,15 +20,15 @@ public class PositivePoint extends Translation2d {
         super(point.getX(), point.getY());
     }
 
-    public FieldPoint toFieldPos(boolean isOnRed) {
-        if (isOnRed) {
+    public FieldPoint toFieldPos() {
+        if (SwerveSubsystem.isOnRed()) {
             return new FieldPoint(SensorConstants.sizeOfFieldMeters - getX(), getY());
         }
         return new FieldPoint(getX(), getY());
     }
 
-    public DrivePoint toDrivePos(boolean isOnRed) {
-        if (isOnRed) {
+    public DrivePoint toDrivePos() {
+        if (SwerveSubsystem.isOnRed()) {
             return new DrivePoint(getX(), getY());
         }
         return new DrivePoint(getX(), -Math.abs(getY()));

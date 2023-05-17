@@ -3,8 +3,12 @@ package frc.robot.subsystems.swerveExtras;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.SensorConstants;
+import frc.robot.subsystems.SwerveSubsystem;
 
 public class FieldPose2d extends Pose2d {
+    // field position -> the actual postion of the robot on the field. photon vision
+    // returns this
+
     public FieldPose2d() {
         super();
     }
@@ -21,15 +25,15 @@ public class FieldPose2d extends Pose2d {
         return new FieldPoint(getX(), getY());
     }
 
-    public DrivePose2d toDrivePose2d(boolean isOnRed) {
-        if (isOnRed) {
+    public DrivePose2d toDrivePose2d() {
+        if (SwerveSubsystem.isOnRed()) {
             return new DrivePose2d(SensorConstants.sizeOfFieldMeters - getX(), getY(), getRotation());
         }
         return new DrivePose2d(getX(), -Math.abs(getY()), getRotation());
     }
 
-    public PosPose2d toPosPose2d(boolean isOnRed) {
-        if (isOnRed) {
+    public PosPose2d toPosPose2d() {
+        if (SwerveSubsystem.isOnRed()) {
             return new PosPose2d(SensorConstants.sizeOfFieldMeters - getX(), getY(), getRotation());
         }
         return new PosPose2d(getX(), getY(), getRotation());

@@ -3,8 +3,12 @@ package frc.robot.subsystems.swerveExtras;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.SensorConstants;
+import frc.robot.subsystems.SwerveSubsystem;
 
 public class PosPose2d extends Pose2d {
+    // positive/blue position -> simplfyed position for comparisions to auto points
+
+
     public PosPose2d() {
         super();
     }
@@ -21,15 +25,15 @@ public class PosPose2d extends Pose2d {
         return new PositivePoint(getX(), getY());
     }
 
-    public FieldPose2d toFieldPose2d(boolean isOnRed) {
-        if (isOnRed) {
+    public FieldPose2d toFieldPose2d() {
+        if (SwerveSubsystem.isOnRed()) {
             return new FieldPose2d(SensorConstants.sizeOfFieldMeters - getX(), getY(), getRotation());
         }
         return new FieldPose2d(getX(), getY(), getRotation());
     }
 
-    public DrivePose2d toDrivePose2d(boolean isOnRed) {
-        if (isOnRed) {
+    public DrivePose2d toDrivePose2d() {
+        if (SwerveSubsystem.isOnRed()) {
             return new DrivePose2d(getX(), getY(), getRotation());
         }
         return new DrivePose2d(getX(), -Math.abs(getY()), getRotation());

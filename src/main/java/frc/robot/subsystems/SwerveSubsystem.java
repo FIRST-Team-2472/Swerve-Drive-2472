@@ -79,11 +79,11 @@ public class SwerveSubsystem extends SubsystemBase {
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
             new Rotation2d(0), getModulePositions());
     private GenericEntry headingShuffleBoard, odometerShuffleBoard, rollSB, pitchSB;
-    private BooleanSubscriber isOnRed;
+    private static BooleanSubscriber isOnRed;
     private final AccelerationLimiter xLimiter, yLimiter, turningLimiter;
     private PIDController xController, yController, thetaController;
 
-    private final SendableChooser<String> colorChooser = new SendableChooser<>();
+    private static final SendableChooser<String> colorChooser = new SendableChooser<>();
     private final String red = "Red", blue = "Blue";
 
     public SwerveSubsystem() {
@@ -149,7 +149,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     // used for anything that requires team color.
     // this is housed in swerve subsystem since it uses it the most
-    public boolean isOnRed() {
+    public static boolean isOnRed() {
         // gets the selected team color from the suffleboard
         String choices = colorChooser.getSelected();
         if (choices == "Red")
@@ -224,7 +224,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void resetOdometryFromFieldPos(FieldPose2d fieldPos) {
-        resetOdometryFromPositivePos(fieldPos.toPosPose2d(isOnRed()));
+        resetOdometryFromPositivePos(fieldPos.toPosPose2d());
     }
 
     public void resetOdometryFromPositivePos(PosPose2d posPose) {
@@ -233,7 +233,7 @@ public class SwerveSubsystem extends SubsystemBase {
         // offset is used if the robot starts in a direction that isn't the forward
         // direction
 
-        DrivePose2d tempPos = posPose.toDrivePose2d(isOnRed());
+        DrivePose2d tempPos = posPose.toDrivePose2d();
         odometer.resetPosition(getRotation2d(), getModulePositions(), tempPos);
     }
 
@@ -366,7 +366,7 @@ public class SwerveSubsystem extends SubsystemBase {
         // No idea how Sawyer figured this out, but he did.
 
         // Covernts odometry pos (a drive pos) into a positive pos for comparison
-        PositivePoint robotPose = getDrivePoint().toPositivePos(isOnRed());
+        PositivePoint robotPose = getDrivePoint().toPositivePos();
         Translation2d nodePose = comparisonArray[0].getTranslation();
         //Sets an initial value to a value in the array, so the intial value isn't smaller than all of the values in the array 
         double smallestConeDistance = robotPose.getDistance(nodePose);
@@ -423,51 +423,4 @@ public class SwerveSubsystem extends SubsystemBase {
         pitchSB.setDouble(getPitch());
         rollSB.setDouble(getRoll());
     }
-
-    // drive position -> only one that can be directly feed to the odometer. The
-    // only postion the odometer can actually use
-    // positive/blue position -> simplfyed position for comparisions to auto points
-    // field position -> the actual postion of the robot on the field. photon vision
-    // returns this
-   /*  public Translation2d fieldPosToDrivePos(Translation2d fieldPos) {
-        if (isOnRed()) {
-            return new Translation2d(SensorConstants.sizeOfFieldMeters - fieldPos.getX(), fieldPos.getY());
-        }
-        return new Translation2d(fieldPos.getX(), -Math.abs(fieldPos.getY()));
-    }
-
-    public Translation2d fieldPoseToPositivePos(Translation2d fieldPos) {
-        if (isOnRed()) {
-            return new Translation2d(SensorConstants.sizeOfFieldMeters - fieldPos.getX(), fieldPos.getY());
-        }
-        return fieldPos;
-    }
-
-    public Translation2d positivePosToFieldPos(Translation2d positivePose) {
-        if (isOnRed()) {
-            return new Translation2d(SensorConstants.sizeOfFieldMeters - positivePose.getX(), positivePose.getY());
-        }
-        return positivePose;
-    }
-
-    public Translation2d positivePosToDrivePos(Translation2d positivePose) {
-        if (isOnRed()) {
-            return positivePose;
-        }
-        return new Translation2d(positivePose.getX(), -Math.abs(positivePose.getY()));
-    }
-
-    public Translation2d drivePosToFieldPos(Translation2d drivePos) {
-        if (isOnRed()) {
-            return new Translation2d(SensorConstants.sizeOfFieldMeters - drivePos.getX(), drivePos.getY());
-        }
-        return new Translation2d(drivePos.getX(), Math.abs(drivePos.getY()));
-    }
-
-    public Translation2d drivePosToPositivePos(Translation2d drivePos) {
-        if (isOnRed()) {
-            return drivePos;
-        }
-        return new Translation2d(drivePos.getX(), Math.abs(drivePos.getY()));
-    }*/
 }

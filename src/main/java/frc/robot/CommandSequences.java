@@ -46,11 +46,11 @@ public class CommandSequences {
                 AutoConstants.kMaxAccelerationMetersPerSecondSquared)
                 .setKinematics(DriveConstants.kDriveKinematics);
 
-        Pose2d driveStartPoint = startPoint.toDrivePose2d(swerveSubsystem.isOnRed());
-        Pose2d driveEndPoint = endPoint.toDrivePose2d(swerveSubsystem.isOnRed());
+        Pose2d driveStartPoint = startPoint.toDrivePose2d();
+        Pose2d driveEndPoint = endPoint.toDrivePose2d();
         List<Translation2d> driveMidPoints = new ArrayList<Translation2d>();
         for (int i = 0; i < midPoints.size(); i++)
-            driveMidPoints.add(midPoints.get(i).toDrivePos(swerveSubsystem.isOnRed()));
+            driveMidPoints.add(midPoints.get(i).toDrivePos());
 
         // 2. Generate trajectory
         // Genrates trajectory need to feed start point, a series of inbetween points,
