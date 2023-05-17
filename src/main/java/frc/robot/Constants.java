@@ -87,21 +87,24 @@ public final class Constants {
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 2.74 - (Math.PI / 2); // 0.15
         public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 1.90 - (Math.PI / 2); // 2.74
 
-        // Max physical speed of our motors. Required for motor speed caculations 
+        // Max physical speed of our motors. Required for motor speed caculations
         // To find set the modules to 100% and see what speed cap out at
         public static final double kPhysicalMaxSpeedMetersPerSecond = 4;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 7 * 2 * Math.PI;
 
+    }
+
+    public static final class TeleDriveConstants {
         // Motion constants for joystick drive mode -> dependant on max speed
         // Max x/y speed of robot in this drive mode
-        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
+        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 4;
         // Max rotation speed of robot in this drive mode
-        public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
-                kPhysicalMaxAngularSpeedRadiansPerSecond / 16;
+        public static final double kMaxAngularSpeedRadiansPerSecond = //
+                DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 16;
         // Max x/y acceleration of robot in this drive mode
-        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 8;
+        public static final double kMaxAccelerationUnitsPerSecond = 8;
         // Max rotational acceleration of robot in this drive mode
-        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = Math.PI * 2;
+        public static final double kMaxAngularAccelerationUnitsPerSecond = Math.PI * 2;
     }
 
     public static final class AutoConstants {
@@ -110,7 +113,7 @@ public final class Constants {
         public static final double kMaxAngularSpeedRadiansPerSecond = //
                 DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 14;
         public static final double kMaxAccelerationMetersPerSecondSquared = 5.5;
-        public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI/2;
+        public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 2;
         public static final double kPXController = 1.5;
         public static final double kPYController = 1.5;
         public static final double kPThetaController = 1.5;
@@ -119,23 +122,26 @@ public final class Constants {
                 new TrapezoidProfile.Constraints(
                         kMaxAngularSpeedRadiansPerSecond,
                         kMaxAngularAccelerationRadiansPerSecondSquared);
+    }
 
+    public static final class TargetPosConstants {
         // Motion constants for target position drive mode
-        public static final double kTargetPosMaxSpeed = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 4;
-        public static final double kTargetPosMaxAngularSpeed = //
+        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 4;
+        public static final double kMaxAngularSpeed = //
                 DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 16;
-        public static final double kTargetPosForwardMaxAcceleration = 2;
-        public static final double kTargetPosBackwardMaxAcceleration = -12;
-        public static final double kTargetPosMaxAngularAcceleration = Math.PI / 3;
-        public static final double kTargetPosBackwardAngularAcceleration = -Math.PI * 9;
+
+        public static final double kForwardMaxAcceleration = 2;
+        public static final double kBackwardMaxAcceleration = -12;
+        public static final double kMaxAngularAcceleration = Math.PI / 3;
+        public static final double kBackwardAngularAcceleration = -Math.PI * 9;
+
         public static final double kMinAngluarSpeedRadians = Math.PI / 16;
         public static final double kMinSpeedMetersPerSec = .2;
 
-        public static final double kTargetPosPDriveController = 1.9;
-        public static final double kTargetPosPAngleController = 1.9;
-        public static final double kTargetPosAcceptableDistanceError = 0.04;
-        public static final double kTargetPosAcceptableAngleError = 1.5;
-
+        public static final double kPDriveController = 1.9;
+        public static final double kPAngleController = 1.9;
+        public static final double kAcceptableDistanceError = 0.04;
+        public static final double kAcceptableAngleError = 1.5;
     }
 
     public static final class OIConstants {

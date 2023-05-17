@@ -21,9 +21,10 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SensorConstants;
+import frc.robot.Constants.TargetPosConstants;
+import frc.robot.Constants.TeleDriveConstants;
 import frc.robot.subsystems.swerveExtras.AccelerationLimiter;
 import frc.robot.subsystems.swerveExtras.DrivePoint;
 import frc.robot.subsystems.swerveExtras.DrivePose2d;
@@ -107,13 +108,13 @@ public class SwerveSubsystem extends SubsystemBase {
         colorChooser.addOption(blue, blue);
         driverBoard.add("Team Chooser", colorChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
 
-        xLimiter = new AccelerationLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-        yLimiter = new AccelerationLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-        turningLimiter = new AccelerationLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
+        xLimiter = new AccelerationLimiter(TeleDriveConstants.kMaxAccelerationUnitsPerSecond);
+        yLimiter = new AccelerationLimiter(TeleDriveConstants.kMaxAccelerationUnitsPerSecond);
+        turningLimiter = new AccelerationLimiter(TeleDriveConstants.kMaxAngularAccelerationUnitsPerSecond);
 
-        xController = new PIDController(AutoConstants.kTargetPosPDriveController, 0, 0);
-        yController = new PIDController(AutoConstants.kTargetPosPDriveController, 0, 0);
-        thetaController = new PIDController(AutoConstants.kTargetPosPAngleController, 0, 0);
+        xController = new PIDController(TargetPosConstants.kPDriveController, 0, 0);
+        yController = new PIDController(TargetPosConstants.kPDriveController, 0, 0);
+        thetaController = new PIDController(TargetPosConstants.kPAngleController, 0, 0);
 
         // zeros heading after pigeon boots up
         new Thread(() -> {
@@ -246,9 +247,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
 
     public void intializeJoystickRunFromField() {
-        xLimiter.setLimit(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-        yLimiter.setLimit(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-        turningLimiter.setLimit(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
+        xLimiter.setLimit(TeleDriveConstants.kMaxAccelerationUnitsPerSecond);
+        yLimiter.setLimit(TeleDriveConstants.kMaxAccelerationUnitsPerSecond);
+        turningLimiter.setLimit(TeleDriveConstants.kMaxAngularAccelerationUnitsPerSecond);
 
         xLimiter.reset(getXSpeedFieldRel());
         yLimiter.reset(getYSpeedFieldRel());
@@ -257,27 +258,27 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public void excuteJoystickRunFromField(double xSpeedPercent, double ySpeedPercent, double thetaSpeedPercent) {
         // 3. Make the driving smoother (limits acceleration)
-        xSpeedPercent = xLimiter.calculate(xSpeedPercent * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond);
-        ySpeedPercent = yLimiter.calculate(ySpeedPercent * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond);
+        xSpeedPercent = xLimiter.calculate(xSpeedPercent * TeleDriveConstants.kMaxSpeedMetersPerSecond);
+        ySpeedPercent = yLimiter.calculate(ySpeedPercent * TeleDriveConstants.kMaxSpeedMetersPerSecond);
         thetaSpeedPercent = turningLimiter
-                .calculate(thetaSpeedPercent * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond);
+                .calculate(thetaSpeedPercent * TeleDriveConstants.kMaxAngularSpeedRadiansPerSecond);
 
         runModulesFieldRelative(xSpeedPercent, ySpeedPercent, thetaSpeedPercent);
     }
 
     public void initializeDriveToPointAndRotate() {
-        xLimiter.setLimit(AutoConstants.kTargetPosForwardMaxAcceleration,
-                AutoConstants.kTargetPosBackwardMaxAcceleration);
-        yLimiter.setLimit(AutoConstants.kTargetPosForwardMaxAcceleration,
-                AutoConstants.kTargetPosBackwardMaxAcceleration);
+        xLimiter.setLimit(TargetPosConstants.kForwardMaxAcceleration,
+        TargetPosConstants.kBackwardMaxAcceleration);
+        yLimiter.setLimit(TargetPosConstants.kForwardMaxAcceleration,
+        TargetPosConstants.kBackwardMaxAcceleration);
         xLimiter.reset(getXSpeedFieldRel());
         yLimiter.reset(getYSpeedFieldRel());
 
-        xController.setPID(AutoConstants.kTargetPosPDriveController, 0, 0);
+        xController.setPID(TargetPosConstants.kPDriveController, 0, 0);
         xController.reset();
-        yController.setPID(AutoConstants.kTargetPosPDriveController, 0, 0);
+        yController.setPID(TargetPosConstants.kPDriveController, 0, 0);
         yController.reset();
-        thetaController.setPID(AutoConstants.kTargetPosPAngleController, 0, 0);
+        thetaController.setPID(TargetPosConstants.kPAngleController, 0, 0);
         thetaController.reset();
     }
 
@@ -290,30 +291,30 @@ public class SwerveSubsystem extends SubsystemBase {
         Rotation2d angleDifference = getRotation2d().minus(targetPosition.getRotation());
         double turningSpeed = MathUtil.clamp(thetaController.calculate(angleDifference.getRadians(),
                 0), -1, 1);
-        turningSpeed *= AutoConstants.kTargetPosMaxAngularSpeed;
-        turningSpeed += Math.copySign(AutoConstants.kMinAngluarSpeedRadians, turningSpeed);
+        turningSpeed *= TargetPosConstants.kMaxAngularSpeed;
+        turningSpeed += Math.copySign(TargetPosConstants.kMinAngluarSpeedRadians, turningSpeed);
 
-        xSpeed = xLimiter.calculate(xSpeed * AutoConstants.kTargetPosMaxSpeed);
-        ySpeed = yLimiter.calculate(ySpeed * AutoConstants.kTargetPosMaxSpeed);
+        xSpeed = xLimiter.calculate(xSpeed * TargetPosConstants.kMaxSpeedMetersPerSecond);
+        ySpeed = yLimiter.calculate(ySpeed * TargetPosConstants.kMaxSpeedMetersPerSecond);
 
         double unitCircleAngle = Math.atan2(ySpeed, xSpeed);
-        xSpeed += Math.copySign(AutoConstants.kMinSpeedMetersPerSec, xSpeed) * Math.abs(Math.cos(unitCircleAngle));
-        ySpeed += Math.copySign(AutoConstants.kMinSpeedMetersPerSec, ySpeed) * Math.abs(Math.sin(unitCircleAngle));
+        xSpeed += Math.copySign(TargetPosConstants.kMinSpeedMetersPerSec, xSpeed) * Math.abs(Math.cos(unitCircleAngle));
+        ySpeed += Math.copySign(TargetPosConstants.kMinSpeedMetersPerSec, ySpeed) * Math.abs(Math.sin(unitCircleAngle));
 
         runModulesFieldRelative(xSpeed, ySpeed, turningSpeed);
     }
 
     public void initializeRotateToAngle() {
-        thetaController.setPID(AutoConstants.kTargetPosPAngleController, 0, 0);
+        thetaController.setPID(TargetPosConstants.kPAngleController, 0, 0);
         thetaController.reset();
     }
 
     public void excuteRotateToAngle(Rotation2d targetPosition) {
         Rotation2d angleDifference = getRotation2d().minus(targetPosition);
         double turningSpeed = MathUtil.clamp(thetaController.calculate(angleDifference.getRadians(),
-                0), -1, 1) * AutoConstants.kTargetPosMaxAngularSpeed;
+                0), -1, 1) * TargetPosConstants.kMaxAngularSpeed;
 
-        turningSpeed += Math.copySign(AutoConstants.kMinAngluarSpeedRadians, turningSpeed);
+        turningSpeed += Math.copySign(TargetPosConstants.kMinAngluarSpeedRadians, turningSpeed);
 
         runModulesFieldRelative(0, 0, turningSpeed);
     }
@@ -352,12 +353,12 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public boolean isAtPoint(Translation2d targetDrivePos) {
         return getPose().getTranslation().getDistance(targetDrivePos) //
-                <= AutoConstants.kTargetPosAcceptableDistanceError; //
+                <= TargetPosConstants.kAcceptableDistanceError; //
     }
 
     public boolean isAtAngle(Rotation2d angle) {
         return Math.abs(getRotation2d().minus(angle).getDegrees()) //
-                <= AutoConstants.kTargetPosAcceptableAngleError;
+                <= TargetPosConstants.kAcceptableAngleError;
     }
 
     public Pose2d getNearestPosFromArray(Pose2d[] comparisonArray) {
