@@ -12,22 +12,22 @@ public final class Constants {
         public static final double kDriveMotorGearRatio = 1/8.14;
         public static final double kTurningMotorGearRatio = 1/12.8;
         //2048 is pulses per rotation of the motor
-        public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters*(1.0/2048.0);
+        public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters * (1.0/2048.0);
         public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI*(1.0/2048.0);
         
         //CTRE mesures their velcity in 100ms, so we multiply it by 10 to get 1s
         public static final double kDriveEncoderRPMS2MeterPerSec = kDriveEncoderRot2Meter*10;
         public static final double kTurningEncoderRPMS2RadPerSec = kTurningEncoderRot2Rad*10;
         //use guess and check to find. when the module is overshooting this needs to be fine tuned
-        public static final double kPTurning = 0.2;
+        public static final double kPTurning = 0.4;
     }
 
     public static final class DriveConstants {
 
-        public static final double kTrackWidth = Units.inchesToMeters(18);
         // Distance between right and left wheels
-        public static final double kWheelBase = Units.inchesToMeters(30);
+        public static final double kTrackWidth = Units.inchesToMeters(24);
         // Distance between front and back wheels
+        public static final double kWheelBase = Units.inchesToMeters(20);
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
                 new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
                 new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -50,9 +50,9 @@ public final class Constants {
         public static final boolean kFrontRightTurningEncoderReversed = true;
         public static final boolean kBackRightTurningEncoderReversed = true;
 
-        public static final boolean kFrontLeftDriveEncoderReversed = false;
-        public static final boolean kBackLeftDriveEncoderReversed = false;
-        public static final boolean kFrontRightDriveEncoderReversed = false;
+        public static final boolean kFrontLeftDriveEncoderReversed = true;
+        public static final boolean kBackLeftDriveEncoderReversed = true;
+        public static final boolean kFrontRightDriveEncoderReversed = true;
         public static final boolean kBackRightDriveEncoderReversed = true;
 
         public static final int kFrontLeftDriveAbsoluteEncoderPort = 21;
@@ -61,20 +61,20 @@ public final class Constants {
         public static final int kBackRightDriveAbsoluteEncoderPort = 23;
 
         //Positive is clockwise
-        public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = true;
+        public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;
         public static final boolean kBackLeftDriveAbsoluteEncoderReversed = true;
-        public static final boolean kFrontRightDriveAbsoluteEncoderReversed = true;
-        public static final boolean kBackRightDriveAbsoluteEncoderReversed = true;
+        public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
+        public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
         //To find set the motors forward record the value
-        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.003;
-        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.858;
-        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.153;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.686;
+        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 0.56143696836;
+        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = -2.84706834231;
+        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -1.4327380558;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 1.091;
 
         //To find set the modules to 100% and see what speed cap out at
-        public static final double kPhysicalMaxSpeedMetersPerSecond = 4;
-        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 7 * 2 * Math.PI;
+        public static final double kPhysicalMaxSpeedMetersPerSecond = 4.186;
+        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 50;
 
         //arbitrary chosen based on what drivers pick
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;

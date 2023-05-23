@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.networktables.GenericEntry;
@@ -27,7 +28,9 @@ public class Robot extends TimedRobot {
   private GenericEntry FLdriveS, FLturningS, FLAbsoluteS,
       BLdriveS, BLturningS, BLAbsoluteS,
       BRdriveS, BRturningS, BRAbsoluteS,
-      FRdriveS, FRturningS, FRAbsoluteS;
+      FRdriveS, FRturningS, FRAbsoluteS,
+      FLdriveVelocity, FRdriveVelocity, BLdriveVelocity, BRdriveVelocity,
+      FLturningVelocity, FRturningVelocity, BLturningVelocity, BRturningVelocity;
 
   private TalonFX FLdriveMotor = new TalonFX(DriveConstants.kFrontLeftDriveMotorPort);
   private TalonFX FLturningMotor = new TalonFX(DriveConstants.kFrontLeftTurningMotorPort);
@@ -49,6 +52,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     ShuffleboardTab programmerBoard = Shuffleboard.getTab("Programmer Board");
+    ShuffleboardTab velocityBoard = Shuffleboard.getTab("Velocity Board");
 
     FLdriveS = programmerBoard.add("FL Drive Count", 0).getEntry();
     FLturningS = programmerBoard.add("FL Turning Count", 0).getEntry();
@@ -65,6 +69,18 @@ public class Robot extends TimedRobot {
     FRdriveS = programmerBoard.add("FR Drive Count", 0).getEntry();
     FRturningS = programmerBoard.add("FR Turning Count", 0).getEntry();
     FRAbsoluteS = programmerBoard.add("FR Absolute Value", 0).getEntry();
+
+    FLdriveVelocity = velocityBoard.add("FL Drive Vel", 0).getEntry();
+    FLturningVelocity = velocityBoard.add("FL Turning Vel", 0).getEntry();
+
+    FRdriveVelocity = velocityBoard.add("FR Drive Vel", 0).getEntry();
+    FRturningVelocity = velocityBoard.add("FR Turning Vel", 0).getEntry();
+    
+    BLdriveVelocity = velocityBoard.add("BL Drive Vel", 0).getEntry();
+    BLturningVelocity = velocityBoard.add("BL Turning Vel", 0).getEntry();
+    
+    BRdriveVelocity = velocityBoard.add("BR Drive Vel", 0).getEntry();
+    BRturningVelocity = velocityBoard.add("BR Turning Vel", 0).getEntry();
   }
 
   @Override
@@ -84,6 +100,18 @@ public class Robot extends TimedRobot {
     FRdriveS.setDouble(FRdriveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter);
     FRturningS.setDouble(FRturningMotor.getSelectedSensorPosition() * ModuleConstants.kTurningEncoderRot2Rad);
     FRAbsoluteS.setDouble(FRabosluteEncoder.getPosition());
+
+    FLdriveVelocity.setDouble(FLdriveMotor.getSelectedSensorVelocity() * ModuleConstants.kDriveEncoderRPMS2MeterPerSec);
+    FLturningVelocity.setDouble(FLturningMotor.getSelectedSensorVelocity() * ModuleConstants.kTurningEncoderRPMS2RadPerSec);
+    
+    FRdriveVelocity.setDouble(FRdriveMotor.getSelectedSensorVelocity() * ModuleConstants.kDriveEncoderRPMS2MeterPerSec);
+    FRturningVelocity.setDouble(FRturningMotor.getSelectedSensorVelocity() * ModuleConstants.kTurningEncoderRPMS2RadPerSec);
+    
+    BLdriveVelocity.setDouble(BLdriveMotor.getSelectedSensorVelocity() * ModuleConstants.kDriveEncoderRPMS2MeterPerSec);
+    BLturningVelocity.setDouble(BLturningMotor.getSelectedSensorVelocity() * ModuleConstants.kTurningEncoderRPMS2RadPerSec);
+    
+    BRdriveVelocity.setDouble(BRdriveMotor.getSelectedSensorVelocity() * ModuleConstants.kDriveEncoderRPMS2MeterPerSec);
+    BRturningVelocity.setDouble(BRturningMotor.getSelectedSensorVelocity() * ModuleConstants.kTurningEncoderRPMS2RadPerSec);
   }
 
   @Override
@@ -125,10 +153,32 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    FLdriveMotor.setSelectedSensorPosition(0);
+    FLturningMotor.setSelectedSensorPosition(0);
+
+    BLdriveMotor.setSelectedSensorPosition(0);
+    BLturningMotor.setSelectedSensorPosition(0);
+
+    BRdriveMotor.setSelectedSensorPosition(0);
+    BRturningMotor.setSelectedSensorPosition(0);
+
+    FRdriveMotor.setSelectedSensorPosition(0);
+    FRturningMotor.setSelectedSensorPosition(0);
   }
 
   @Override
   public void testPeriodic() {
+    /* 
+    FRdriveMotor.set(ControlMode.PercentOutput, 1);
+    BRdriveMotor.set(ControlMode.PercentOutput, 1);
+    FLdriveMotor.set(ControlMode.PercentOutput, 1);
+    BLdriveMotor.set(ControlMode.PercentOutput, 1);
+   */
+    
+    FRturningMotor.set(ControlMode.PercentOutput, 1);
+    BRturningMotor.set(ControlMode.PercentOutput, 1);
+    FLturningMotor.set(ControlMode.PercentOutput, 1);
+    BLturningMotor.set(ControlMode.PercentOutput, 1);
   }
 
   @Override
