@@ -36,6 +36,12 @@ public class CommandSequences {
             genratePath(swerveSubsystem, new PosPose2d(), List.of(),  exampleNodes[0])
         );
     }
+    
+    public Command whateverYouWant(SwerveSubsystem swerveSubsystem){
+        swerveSubsystem.resetOdometryFromPositivePos(new PosPose2d());
+        return new SequentialCommandGroup( genratePath(swerveSubsystem, new PosPose2d(), List.of(new PositivePoint(1, 1)) , simplePosPose(0, 0, 0)),
+         genratePath(swerveSubsystem, new PosPose2d(), List.of(new PositivePoint(1, 1)) , simplePosPose(0, 0, 0)));
+    }
 
     // generates a path via points
     private Command genratePath(SwerveSubsystem swerveSubsystem, PosPose2d startPoint, List<PositivePoint> midPoints,

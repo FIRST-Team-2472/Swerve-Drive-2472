@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
   private final String defaultAuto = "Default Auto";
-
+  private final String coolAuto = "Cool Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
@@ -41,6 +41,7 @@ public class RobotContainer {
     configureButtonBindings();
 
     m_chooser.addOption(defaultAuto, defaultAuto);
+    m_chooser.addOption(coolAuto, coolAuto);
 
     ShuffleboardTab driverBoard = Shuffleboard.getTab("Driver Board");
 
@@ -73,6 +74,9 @@ public class RobotContainer {
 
     if (m_autoSelected == defaultAuto)
       return commandSequences.defualtAuto(swerveSubsystem);
+
+    if (m_autoSelected == coolAuto)
+      return commandSequences.whateverYouWant(swerveSubsystem);
 
     return null;
   }
