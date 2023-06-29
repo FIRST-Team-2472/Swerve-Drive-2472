@@ -402,6 +402,13 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.setDesiredState(desiredStates[3]);
     }
 
+    public void setWheelDirection(Rotation2d angle) {
+        frontLeft.setWheelDirection(new SwerveModuleState(0, angle));
+        frontRight.setWheelDirection(new SwerveModuleState(0, angle));
+        backLeft.setWheelDirection(new SwerveModuleState(0, angle));
+        backRight.setWheelDirection(new SwerveModuleState(0, angle));
+    }
+
     public void resetEncoders() {
         // Resets all of the encoders on the robot.
         frontLeft.resetEncoders();
