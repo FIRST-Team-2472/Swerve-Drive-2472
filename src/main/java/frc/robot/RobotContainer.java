@@ -48,7 +48,7 @@ public class RobotContainer {
 
     // sets up the defalt command for the swerve subsystem. Defalut commands run if
     // no other commands are set
-    // the () -> are lambda expressions.
+    // the () -> are lambda expressions. (so are exampleClass::exampleMethod)
     // lambda is sending over a method
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(swerveSubsystem,
         () -> -leftJoystick.getRawAxis(OIConstants.kLeftDriverYAxis),

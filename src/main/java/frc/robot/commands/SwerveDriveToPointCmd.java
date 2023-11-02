@@ -27,6 +27,7 @@ public class SwerveDriveToPointCmd extends CommandBase {
 
   @Override
   public void initialize() {
+    swerveSubsystem.initializeDriveToPointAndRotate();
     timer.restart();
   }
 
