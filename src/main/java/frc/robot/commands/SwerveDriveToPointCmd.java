@@ -22,11 +22,17 @@ public class SwerveDriveToPointCmd extends CommandBase {
   }
 
   public SwerveDriveToPointCmd(SwerveSubsystem m_SwerveSubsystem, PosPose2d targetPosition) {
-    this(m_SwerveSubsystem, targetPosition.toDrivePose2d());
+    this.swerveSubsystem = m_SwerveSubsystem;
+    this.targetPosition = targetPosition.toDrivePose2d();
+    
+    timer = new Timer();
+
+    addRequirements(m_SwerveSubsystem);
   }
 
   @Override
   public void initialize() {
+    swerveSubsystem.initializeDriveToPointAndRotate();
     timer.restart();
   }
 

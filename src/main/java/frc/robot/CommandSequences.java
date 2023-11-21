@@ -26,7 +26,7 @@ public class CommandSequences {
     PosPose2d[] exampleNodes = new PosPose2d[1];
 
     public CommandSequences() {
-        exampleNodes[0] = simplePosPose(1, 0, 180);
+        exampleNodes[0] = simplePose(1, 0, 180);
     }
     
     public Command defualtAuto(SwerveSubsystem swerveSubsystem) {
@@ -88,7 +88,7 @@ public class CommandSequences {
                 new InstantCommand(() -> swerveSubsystem.stopModules()));
     }
 
-    public PosPose2d simplePosPose(double x, double y, double angleDegrees) {
+    public PosPose2d simplePose(double x, double y, double angleDegrees) {
         return new PosPose2d(x, y, Rotation2d.fromDegrees(angleDegrees));
     }
 

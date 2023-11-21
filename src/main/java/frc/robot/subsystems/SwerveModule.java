@@ -103,16 +103,17 @@ public class SwerveModule {
         // make the swerve module doesn't ever turn more than 90 degrees instead of 180;
         state = SwerveModuleState.optimize(state, getState().angle);
         // set the motor drive speed to the speed given in swerveModuleState
-        driveMotor.set(ControlMode.PercentOutput,
-                state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        driveMotor.set(ControlMode.Velocity,
+                state.speedMetersPerSecond * ModuleConstants.kDriveEncoderRPMS2MeterPerSec);
         // uses PID to slow down as it approaches the target ange given in
         // swerveModuleState
-        turningMotor.set(ControlMode.PercentOutput,
-                turningPidController.calculate(getAbsolutePosition(), state.angle.getRadians()));
+        turningMotor.set(ControlMode.Velocity,
+                turningPidController.calculate(getAbsolutePosition(), state.angle.getRadians())
+                * ModuleConstants.kTurningEncoderRPMS2RadPerSec * DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond);
     }
 
     // a swerve module state is composed of a speed and direction
-    public void jankSetDesiredStateForExtremeGamers(SwerveModuleState state) {
+    public void setWheelDirection(SwerveModuleState state) {
 
         // make the swerve module doesn't ever turn more than 90 degrees instead of 180;
         state = SwerveModuleState.optimize(state, getState().angle);
