@@ -22,7 +22,7 @@ public final class Constants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
         // gear ratio is inversed (1/gear ratio) so we can multiply instead of dividing
         // the Rot to meter funtion
-        public static final double kDriveMotorGearRatio = 1 / 8.14;
+        public static final double kDriveMotorGearRatio = 1 / 6.75;
         public static final double kTurningMotorGearRatio = 1 / 12.8;
         // 2048 is pulses per rotation of the motor
         public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters
