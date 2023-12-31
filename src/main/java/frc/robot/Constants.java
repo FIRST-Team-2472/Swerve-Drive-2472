@@ -49,15 +49,15 @@ public final class Constants {
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
                 new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
 
-        public static final int kFrontLeftDriveMotorPort = 17;
-        public static final int kBackLeftDriveMotorPort = 11;
-        public static final int kFrontRightDriveMotorPort = 15;
-        public static final int kBackRightDriveMotorPort = 13;
+        public static final int kFrontLeftDriveMotorPort = 56;
+        public static final int kBackLeftDriveMotorPort = 53;
+        public static final int kFrontRightDriveMotorPort = 55;
+        public static final int kBackRightDriveMotorPort = 43;
 
-        public static final int kFrontLeftTurningMotorPort = 16;
-        public static final int kBackLeftTurningMotorPort = 10;
-        public static final int kFrontRightTurningMotorPort = 14;
-        public static final int kBackRightTurningMotorPort = 12;
+        public static final int kFrontLeftTurningMotorPort = 57;
+        public static final int kBackLeftTurningMotorPort = 51;
+        public static final int kFrontRightTurningMotorPort = 54;
+        public static final int kBackRightTurningMotorPort = 50;
 
         // Positive should be clockwise
         public static final boolean kFrontLeftTurningEncoderReversed = true;
