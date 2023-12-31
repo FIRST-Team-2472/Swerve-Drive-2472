@@ -70,10 +70,10 @@ public final class Constants {
         public static final boolean kFrontRightDriveEncoderReversed = true;
         public static final boolean kBackRightDriveEncoderReversed = true;
 
-        public static final int kFrontLeftDriveAbsoluteEncoderPort = 24;
-        public static final int kBackLeftDriveAbsoluteEncoderPort = 21;
-        public static final int kFrontRightDriveAbsoluteEncoderPort = 23;
-        public static final int kBackRightDriveAbsoluteEncoderPort = 22;
+        public static final int kFrontLeftDriveAbsoluteEncoderPort = 59;
+        public static final int kBackLeftDriveAbsoluteEncoderPort = 62;
+        public static final int kFrontRightDriveAbsoluteEncoderPort = 61;
+        public static final int kBackRightDriveAbsoluteEncoderPort = 60;
 
         // Positive should be clockwise
         public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = true;
@@ -163,7 +163,7 @@ public final class Constants {
     public static final class SensorConstants {
         public static final int kCompressorPort = 1;
 
-        public static final int kPigeonID = 20;
+        public static final int kPigeonID = 13;
 
         public static final double sizeOfFieldMeters = 16.53;
     }

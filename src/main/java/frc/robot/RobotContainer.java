@@ -32,7 +32,7 @@ public class RobotContainer {
 
   private final Joystick leftJoystick = new Joystick(OIConstants.kLeftJoystickPort);
   private final Joystick rightJoystick = new Joystick(OIConstants.kRightJoystickPort);
-  private final XboxController xboxController = new XboxController(OIConstants.kXboxControllerPort);
+  private static XboxController xboxController = new XboxController(OIConstants.kXboxControllerPort);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -51,9 +51,9 @@ public class RobotContainer {
     // the () -> are lambda expressions. (so are exampleClass::exampleMethod)
     // lambda is sending over a method
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(swerveSubsystem,
-        () -> -leftJoystick.getRawAxis(OIConstants.kLeftDriverYAxis),
-        () -> leftJoystick.getRawAxis(OIConstants.kLeftDriverXAxis),
-        () -> rightJoystick.getRawAxis(OIConstants.kRightDriverRotAxis),
+        () -> xboxController.getLeftX(),
+        () -> xboxController.getLeftY(),
+        () -> xboxController.getRightX(),
         () -> leftJoystick.getRawButton(1)));
   }
 
